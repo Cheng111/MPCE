@@ -2,6 +2,7 @@
 /* Implement functions defined in graph.h */
 /* Graph Theory Team, Computer Science Department */
 /* University of Tennessee, Knoxville */
+/* Cheng Chen, cchen67@vols.utk.edu, 2022 */
 /* Yun Zhang, yzhang@cs.utk.edu, December 12, 2004 */
 
 

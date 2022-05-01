@@ -1,8 +1,7 @@
 /* Driver file for Clique Enumerator by BK
  *
- * Author: Yun Zhang, yzhang@cs.utk.edu
- * Version: 2.1.a
- * Last modified: 08-18-2008
+ * Author: Cheng Chen: cchen67@vols.utk.edu; Yun Zhang: yzhang@cs.utk.edu
+ * Last modified: 2022
  *
  * Changes: Add the upper bound of clique size to the BK 
  * 

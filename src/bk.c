@@ -1,6 +1,6 @@
 /* Enumerate clique by Bron-Kerbosch Algorithms 
- * Author: Yun Zhang
- * Date: September 2006
+ * Author: Cheng Chen Yun Zhang
+ * Date: 2022
  */
 
 

@@ -19,7 +19,7 @@ all: $(EXECUTABLE)
 #pmce: clique-driver.o $(OBJECTS) #$(HEADERS) Makefile
 pmce: $(OBJECTS) #$(HEADERS) Makefile
 	mv $(OBJECTS) $(OBJDIR)/
-	$(CC) $(CFLAGS) $(LFSFLAG) -o $@ $(OBJDIR)/* $(PTHREADS)
+	$(CC) $(CFLAGS) $(LFSFLAG) -o $@ $(OBJDIR)/*.o $(PTHREADS)
 
 #.c.o:
 $(OBJECTS):

@@ -1,2 +1,2 @@
-# PMCE
+# MPCE
 maximal partiteclique enumaration

@@ -1,6 +1,7 @@
 /* APIs of utility for undirected graphs */
 /* Graph Theory Team, Computer Science Department */ 
 /* University of Tennessee, Knoxville */
+/* Cheng Chen, cchen67@vols.utk.edu, 2022 */
 /* Yun Zhang, yzhang@cs.utk.edu, January 20, 2005 */
 
 #ifndef __UTILITY_H

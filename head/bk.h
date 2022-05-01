@@ -1,6 +1,5 @@
 /* Enumerate clique in graph using Bron-Kerbosch
- * Author: Yun Zhang
- * Date: October 2006
+ * Author: Cheng Chen, Yun Zhang
  */
 
 #ifndef __CLIQUE_H

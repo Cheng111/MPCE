@@ -9,8 +9,10 @@
 #include <string.h>
 #include <search.h>
 #include "graph.h"
+#include "readconfig.h"
 
-char * FilterName;
+//char * FilterName;
+char * confile;
 char C1[100];
 char C2[100];
 char C3[100];
@@ -182,7 +184,10 @@ Graph * graph_edgelist_in(FILE *fp, int FILTER, int PART)
         fprintf(stderr, "Error opening file '%s'\n", FilterName);
         exit(EXIT_FAILURE);
     }
-    int p1_size, p2_size, p3_size;
+    //int p1_size, p2_size, p3_size;
+    G->psizes = (int *)malloc(G->Pnum * sizeof(int));
+    G->_category = (int *)malloc(G->Pnum * sizeof(int));
+    G->_categoryname = (char **)malloc(G->Pnum * sizeof(char *));
     int n = 0;
     if (fscanf(Ffp, "%s %s %s", C1, C2, C3) != 3) 
     {

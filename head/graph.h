@@ -28,6 +28,9 @@ typedef struct graph_t {
   //char ** _category;
   int * _category;
   char ** _categoryname;
+  int * psizes;
+  int * lbs;
+  int Pnum;
 } Graph;
 
 

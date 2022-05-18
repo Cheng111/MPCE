@@ -28,7 +28,8 @@ extern int lb1, lb2, lb3;
 extern int Spart;
 FILE *fp;
 char *outfn, infn[100];
-extern char * FilterName;
+//extern char * FilterName;
+extern char * confile;
 
 
 void print_options(void)
@@ -44,6 +45,7 @@ void print_options(void)
   fprintf(stderr, "                 1 - bron kerbosch version 1 (numerical order)\n");
   fprintf(stderr, "                 2 - bron kerbosch version 2 (improved version)\n");
   fprintf(stderr, "                 3 - modified bron kerbosch to find maximum clique\n");
+  fprintf(stderr, "                 4 - maximal partite cliques enumration (BK without piivot)\n");
   fprintf(stderr, "\n");
 }
 
@@ -82,13 +84,9 @@ void argument_parse(int argc, char **argv)
 	if (!strcmp(argv[i], "-p")) {
 	  PRINT = 1;
 	}
-  if (!strcmp(argv[i], "-f")) {
+  if (!strcmp(argv[i], "--fconf")) {
 	  FILTER = 1;
-    FilterName = argv[i + 1];
-    //readpartite(partitefile);
-    lb1 = atoi(argv[i + 2]);
-    lb2 = atoi(argv[i + 3]);
-    lb3 = atoi(argv[i + 4]);
+    confile = argv[i + 1];
 	}
   }
 

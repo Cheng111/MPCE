@@ -43,6 +43,9 @@ void clique_enumerate(FILE *, u64 *, Graph *, vid_t *, int);
  * ------------------------------------------------------------- */
 void maxclique_find(vid_t *, int *, Graph *, vid_t *, vid_t *, int, int, int);
 
+/* ------------------------------------------------------------- *
+maximal partite cliques enumration (BK without piivot)
+* ------------------------------------------------------------- */
 void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes);
 
 #endif

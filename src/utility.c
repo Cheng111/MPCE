@@ -7,6 +7,7 @@
 #include <string.h>  /* memset */
 #include <sys/time.h>  /* gettimeofday */
 #include "utility.h"
+#include "bit.h"
 
 /**** Timer ****/
 

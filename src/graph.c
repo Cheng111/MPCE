@@ -9,7 +9,8 @@
 #include <string.h>
 #include <search.h>
 #include "graph.h"
-#include "readconfig.h"
+//#include "readconfig.h"
+//#include "ReadKG.h"
 
 //char * FilterName;
 char * confile;
@@ -109,6 +110,11 @@ Graph * graph_edgelist_in(FILE *fp, int FILTER, int PART)
   ENTRY item;
   ENTRY *found_item;
 
+  /*if(FILTER || PART){
+    G = ReadKG(fp);
+    return G;
+  }*/
+
   if (fscanf(fp, "%d %d", &n, &e) != 2) {
 	fprintf(stderr, "Bad file format : n e incorrect\n");
 	exit(-1);
@@ -174,51 +180,6 @@ Graph * graph_edgelist_in(FILE *fp, int FILTER, int PART)
 	fprintf(stderr, "edgelist_in : %d vertices, %d edges\n", k, edges);
 	G->_num_vertices = k;
 	G->_num_active_vertices = k;
-  }
-
-  if(FILTER || PART)
-  {
-    FILE *Ffp = fopen(FilterName, "r");
-    if (!Ffp)
-    {
-        fprintf(stderr, "Error opening file '%s'\n", FilterName);
-        exit(EXIT_FAILURE);
-    }
-    //int p1_size, p2_size, p3_size;
-    G->psizes = (int *)malloc(G->Pnum * sizeof(int));
-    G->_category = (int *)malloc(G->Pnum * sizeof(int));
-    G->_categoryname = (char **)malloc(G->Pnum * sizeof(char *));
-    int n = 0;
-    if (fscanf(Ffp, "%s %s %s", C1, C2, C3) != 3) 
-    {
-	    fprintf(stderr, "Bad file format : C1 C2 C3 incorrect\n");
-	    exit(-1);
-    }
-    if (fscanf(Ffp, "%d %d %d", &p1_size, &p2_size, &p3_size) != 3) 
-    {
-	    fprintf(stderr, "Bad file format : d1 d2 d3 incorrect\n");
-	    exit(-1);
-    }
-    while ((r = fscanf(Ffp, "%s", word1)) != EOF)
-    {
-      n = n + 1;
-      item.key = word1;
-	    if ((found_item = hsearch(item, FIND)) != NULL)
-      {
-	      id = (int *) (found_item->data);
-	      v = *id;
-        if(n <= p1_size)
-        //{G->_category[v] = C1;}
-        {G->_category[v] = 0;}
-        else if(n <= p1_size + p2_size)
-        //{G->_category[v] = C2;}
-        {G->_category[v] = 1;}
-        else
-        //{G->_category[v] = C3;}
-        {G->_category[v] = 2;}
-      }
-    }
-
   }
   
   /* destroy the hash tabel */

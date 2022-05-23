@@ -22,14 +22,14 @@
 extern int LB,UB;  // lower bound and upper bound of clique size
 extern int VERSION;
 extern int PRINT;
-extern int FILTER;
+//extern int FILTER;
 extern int PART;
 extern int lb1, lb2, lb3;
 extern int Spart;
 FILE *fp;
 char *outfn, infn[100];
 //extern char * FilterName;
-extern char * confile;
+char * confile;
 
 
 void print_options(void)
@@ -41,11 +41,12 @@ void print_options(void)
   fprintf(stderr, "  -o <filename>  filename to store cliques if choose to print out\n");
   fprintf(stderr, "  -l <value>     least number of vertices in a clique <default = 3>\n");
   fprintf(stderr, "  -u <value>     most number of vertices in a clique <default = graph size>\n");
-  fprintf(stderr, "  -v [1|2|3]     algorithm version <default = 2>\n");
+  fprintf(stderr, "  -v [1|2|3|4]     algorithm version <default = 2>\n");
   fprintf(stderr, "                 1 - bron kerbosch version 1 (numerical order)\n");
   fprintf(stderr, "                 2 - bron kerbosch version 2 (improved version)\n");
   fprintf(stderr, "                 3 - modified bron kerbosch to find maximum clique\n");
   fprintf(stderr, "                 4 - maximal partite cliques enumration (BK without piivot)\n");
+  fprintf(stderr, "  --fconf        configure file of maximal partite cliques enumration\n");
   fprintf(stderr, "\n");
 }
 
@@ -62,8 +63,8 @@ void argument_parse(int argc, char **argv)
   LB = 3; UB = -1;
   VERSION = 2;
   PRINT = 0;
-  FILTER = 0;
-  PART = 1;
+  //FILTER = 0;
+  PART = 0;
   outfn = NULL;
   lb1 = lb2 = lb3 = 5;
   
@@ -85,7 +86,7 @@ void argument_parse(int argc, char **argv)
 	  PRINT = 1;
 	}
   if (!strcmp(argv[i], "--fconf")) {
-	  FILTER = 1;
+	  PART = 1;
     confile = argv[i + 1];
 	}
   }
@@ -229,7 +230,7 @@ int main(int argc, char  **argv)
 
   argument_parse(argc, argv);
   
-  G = graph_edgelist_in(fp, FILTER, PART);
+  G = graph_edgelist_in(fp, PART);
   fclose(fp);
   if (UB == -1) UB = num_vertices(G);
 

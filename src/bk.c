@@ -14,7 +14,7 @@
 
 
 /* Global Variables */
-int LB, UB, FILTER, PART;
+int LB, UB, PART;
 int VERSION;
 int PRINT;
 int lb1, lb2, lb3;
@@ -33,7 +33,7 @@ void clique_out(FILE *fp, Graph *G, vid_t *clique, int len)
 {
   int i;
 
-  if(FILTER)
+  if(PART)
   {
 	  int p1, p2, p3;
   	  p1 = p2 = p3 =0;

@@ -157,3 +157,50 @@ void printGraph(Graph * G, FILE * fout)
         printf("node %d %s color %d %s\n", i, G->_label[i], G->_category[i], G->_categoryname[G->_category[i]]);
     }
 }
+
+void GetConfig(char * confile, Graph * G)
+{
+    char * line = NULL;
+    size_t len;
+    char * pch;
+    ssize_t read;
+    int i;
+    const char * tlb = "lb";
+    FILE * fconf;
+    if ((fconf = fopen(confile, "r")) == NULL) 
+    {
+        fprintf(stderr, "Can't open file %s\n", confile);
+        exit(-1);
+    }
+    int lb;
+    //printf("G->Pnum %d\n", G->Pnum);
+    G->lbs = (int *) malloc(G->Pnum * sizeof(int));
+    while ((read = getline(&line, &len, fconf)) != -1) {
+        if(line[strlen(line) - 1] == '\n'){
+            line[strlen(line) - 1] = 0;
+        }
+        pch = NULL;
+        pch = strtok(line, " ");
+        //printf("pch %s\n", pch);
+        if(strcmp(pch, tlb) == 0){
+            pch = strtok (NULL, " ");
+            lb = atoi(pch);
+            //printf("lb %d\n", lb);
+            for(i = 0; i < G->Pnum; i++)
+            {G->lbs[i] = lb;}
+        }
+    }
+    fclose(fconf);
+}
+
+//Use for debug
+/*int main(int argc, char  **argv)
+{
+    FILE * fp = fopen(argv[1], "r");
+    Graph *  G = ReadKG(fp);
+    GetConfig(argv[2], G);
+    int i;
+    for(i = 0; i < G->Pnum; i++)
+    {printf("%d ", G->lbs[i]);}
+    printf("\n");
+}*/

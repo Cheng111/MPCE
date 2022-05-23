@@ -10,7 +10,7 @@
 #include <search.h>
 #include "graph.h"
 //#include "readconfig.h"
-//#include "ReadKG.h"
+#include "ReadKG.h"
 
 //char * FilterName;
 char * confile;
@@ -99,7 +99,7 @@ Graph * UW_EdgeList_in(FILE *fp)
   return G;
 }
 
-Graph * graph_edgelist_in(FILE *fp, int FILTER, int PART)
+Graph * graph_edgelist_in(FILE *fp, int PART)
 {
   unsigned int n, e;
   int u, v;
@@ -110,10 +110,10 @@ Graph * graph_edgelist_in(FILE *fp, int FILTER, int PART)
   ENTRY item;
   ENTRY *found_item;
 
-  /*if(FILTER || PART){
+  if(PART){
     G = ReadKG(fp);
     return G;
-  }*/
+  }
 
   if (fscanf(fp, "%d %d", &n, &e) != 2) {
 	fprintf(stderr, "Bad file format : n e incorrect\n");

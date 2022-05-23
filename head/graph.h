@@ -110,7 +110,7 @@ void graph_free(Graph *G);
 /* Read in a graph from an unweighted edge-list format file */
 Graph *UW_EdgeList_in(FILE *fp);
 //Graph *graph_edgelist_in(FILE *fp, int FILTER);
-Graph *graph_edgelist_in(FILE *fp, int FILTER, int PART);
+Graph *graph_edgelist_in(FILE *fp, int PART);
 
 /* Write out a graph to an unweighted edge-list format file */
 void UW_EdgeList_out(FILE *fp, Graph *G);

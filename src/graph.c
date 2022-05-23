@@ -112,6 +112,9 @@ Graph * graph_edgelist_in(FILE *fp, int PART)
 
   if(PART){
     G = ReadKG(fp);
+    /*FILE * tmpout = fopen("test.out", "w");
+    printGraph(G, tmpout);
+    fclose(tmpout);*/
     return G;
   }
 

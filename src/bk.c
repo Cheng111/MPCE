@@ -17,8 +17,8 @@
 int LB, UB, PART;
 int VERSION;
 int PRINT;
-int lb1, lb2, lb3;
-int Spart;
+//int lb1, lb2, lb3;
+//int Spart;
 char * partitefile;
 extern int p1_size, p2_size, p3_size;
 extern char C1[];
@@ -33,7 +33,7 @@ void clique_out(FILE *fp, Graph *G, vid_t *clique, int len)
 {
   int i;
 
-  if(PART)
+  /*if(PART)
   {
 	  int p1, p2, p3;
   	  p1 = p2 = p3 =0;
@@ -55,7 +55,7 @@ void clique_out(FILE *fp, Graph *G, vid_t *clique, int len)
 	  //printf("lb1 %d lb2 %d lb3 %d p1 %d p2 %d p3 %d\n", lb1, lb2, lb3, p1, p2, p3);
 	  if( (p1 < lb1) | (p2 < lb2) | (p3 < lb3) )
 	  {return;}
-  }
+  }*/
   for (i = 0; i < len-1; i++)
 	{//printf("G->_label[clique[i]] %s\n", G->_label[clique[i]]);
 		fprintf(fp, "%s\t", G->_label[clique[i]]);
@@ -420,11 +420,11 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
   vid_t u;
   int i, j;
   //vid_t newvertex[Spart][ce];
-  int new_psizes[Spart];
+  int new_psizes[G->Pnum];
   int upid, jpid;
   int parclique = 0;
-
-  for(i = 0; i < Spart; i++)
+  //printf("lc ne ce %d %d %d\n", lc, ne, ce);
+  for(i = 0; i < G->Pnum; i++)
   {
 	  if(csizes[i] == 0 && psizes[i] == 0)
 	  {return;}
@@ -438,7 +438,7 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 
 	/* Set new cand and not */
 	memset(new, -1, ce*sizeof(vid_t));
-	memset(new_psizes, 0, Spart*sizeof(int));
+	memset(new_psizes, 0, G->Pnum * sizeof(int));
     new_ne = 0;
 	for (j = 0; j < ne; j++)
 	{
@@ -464,14 +464,20 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 	/* Output clique or extend */
 	upid = G->_category[u];
 	clique[lc] = u;
-	csizes[upid]++; 
-	if (new_ce == 0 && lc+1 >= LB) 
+	csizes[upid]++;
+	//printf("new_ce %d\n", new_ce);
+	if(new_ce == 0) 
 	{
 	  parclique = 0;
-	  for(i = 0; i < Spart; i++)
+	  //printf("????????\n");
+	  for(i = 0; i < G->Pnum; i++)
 	  {
-		  if(csizes[i] == 0)
+		  //printf("i %d %d\n", i, csizes[i]);
+		  //if(csizes[i] == 0)
+		  //printf("csizes[i] G->lbs[i] %d %d\n", csizes[i], G->lbs[i]);
+		  if(csizes[i] < G->lbs[i])
 		  {
+			  //printf("%d, %d, %d\n", i, csizes[i], G->lbs[i]);
 			  parclique = 1;
 			  break;
 		  }
@@ -479,7 +485,7 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 	  if(parclique == 0)
 	  {
 		  nclique[lc+1]++;
-	  //fprint("hahahah LB %d\n", LB);
+	    //print("hahahah LB %d\n", LB);
 	  	if (PRINT) clique_out(fp, G, clique, lc+1);
 	  }
 	}

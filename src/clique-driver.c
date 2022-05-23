@@ -11,10 +11,11 @@
  */
 
 #include <string.h>
-#include "bit.h"
+//#include "bit.h"
 #include "graph.h"
-#include "utility.h"
+//#include "utility.h"
 #include "bk.h"
+#include "ReadKG.h"
 //#include "PartiteSize.h"
 
 
@@ -24,7 +25,7 @@ extern int VERSION;
 extern int PRINT;
 //extern int FILTER;
 extern int PART;
-extern int lb1, lb2, lb3;
+//extern int lb1, lb2, lb3;
 extern int Spart;
 FILE *fp;
 char *outfn, infn[100];
@@ -66,7 +67,7 @@ void argument_parse(int argc, char **argv)
   //FILTER = 0;
   PART = 0;
   outfn = NULL;
-  lb1 = lb2 = lb3 = 5;
+  //lb1 = lb2 = lb3 = 5;
   
   
   for (i = 2; i < argc; i++) {
@@ -129,15 +130,20 @@ void maximal_clique(Graph *G)
 	{clique_find_v2(fp1, nclique, G, clique, vertices, 0, 0, n);}
   else if(VERSION == 4)
   {
-    int psizes[Spart];//each partite has how much nodes
-    int csizes[Spart];//each partite has how much nodes
-    memset(psizes, 0, Spart*sizeof(int));
-    memset(csizes, 0, Spart*sizeof(int));
+  
+    int psizes[G->Pnum];//each partite has how much nodes
+    int csizes[G->Pnum];//each partite has how much nodes
+    //memset(psizes, 0, Spart*sizeof(int));
+    //memset(csizes, 0, Spart*sizeof(int));
+    memset(psizes, 0, G->Pnum*sizeof(int));
+    memset(csizes, 0, G->Pnum*sizeof(int));
     for (i = 0; i < n; i++)
     {
       pid = G->_category[i];
       psizes[pid]++;
     }
+    //printf("4444444444444444444444\n");
+    GetConfig(confile, G);
     clique_find_v4(fp1, nclique, G, clique, vertices, 0, 0, n, csizes, psizes);
   }
   utime = get_cur_time() - utime;

@@ -10,14 +10,14 @@ PTHREADS = -lpthread
 TESTFLAGS = #-DPERFORMANCE -DDEBUG
 LFSFLAG = -D_FILE_OFFSET_BITS=64
 
-OBJECTS = clique-driver.o graph.o utility.o bk.o
-HEADERS = graph.h utility.h bk.h
-EXECUTABLE = pmce
+OBJECTS = clique-driver.o graph.o utility.o bk.o ReadKG.o
+HEADERS = graph.h utility.h bk.h ReadKG.h
+EXECUTABLE = mpce
 
 all: $(EXECUTABLE)
 
 #pmce: clique-driver.o $(OBJECTS) #$(HEADERS) Makefile
-pmce: $(OBJECTS) #$(HEADERS) Makefile
+$(EXECUTABLE): $(OBJECTS) #$(HEADERS) Makefile
 	mv $(OBJECTS) $(OBJDIR)/
 	$(CC) $(CFLAGS) $(LFSFLAG) -o $@ $(OBJDIR)/*.o $(PTHREADS)
 

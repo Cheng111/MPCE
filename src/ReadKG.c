@@ -6,7 +6,7 @@
 
 Graph * ReadKG(FILE *fp)
 {
-    unsigned int N, E, C;
+    unsigned int N = 0, E = 0, C = 0;
     char * line = NULL;
     char * pch;
     size_t len;
@@ -18,10 +18,12 @@ Graph * ReadKG(FILE *fp)
     ENTRY *found_item;
     ENTRY citem;
     ENTRY *found_citem;
-    int u, v, cid;
+    int u, v = -1, cid = -1;
     int k=0, edges=0, cid_use = 0;
-    Graph *G;
-    int *id, *ids, *cids;
+    Graph * G = NULL;
+    int *id;
+    int *cids = NULL;
+    int *ids = NULL;
     
     while ((read = getline(&line, &len, fp)) != -1) {
         if(line[strlen(line) - 1] == '\n'){
@@ -46,7 +48,7 @@ Graph * ReadKG(FILE *fp)
             E = atoi(pch);
             pch = strtok (NULL, " ");
             C = atoi(pch);
-            printf("N %d E %d C %d\n", N, E, C);
+            //printf("N %d E %d C %d\n", N, E, C);
             G = graph_make(N);
             (void) hcreate(N + C);
             ids = (int *) malloc(N * sizeof(int));

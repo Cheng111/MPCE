@@ -101,6 +101,46 @@ void argument_parse(int argc, char **argv)
   return;
 }
 
+int cmp_gp(GP *a, GP *b)
+{
+    //GP *a1 = (GP *)a;
+    //GP *a2 = (GP *)b;
+    if (a->size > b->size) {return 1;}
+    else if (a->size < b->size) {return -1;}
+    else {return 0;}
+}
+
+void order_vertex(Graph *G, int psizes[], vid_t * vertices, GP gp[])
+{
+  int i, j, k;
+  //GP gp[G->Pnum];
+  int c;
+  for(i = 0; i < G->Pnum; i++)
+  {
+    gp[i].vertices = (int *) malloc(psizes[i] * sizeof(int));
+    gp[i].index = 0;
+  }
+  for(i = 0; i < G->_num_vertices; i++)
+  {
+    c = G->_category[i];
+    (gp[c].vertices)[gp[c].index] = i;
+    gp[c].index = gp[c].index + 1;
+  }
+  qsort(gp, G->Pnum, sizeof(GP), cmp_gp);
+  //printf("sorted gp ");
+  k = 0;
+  for(i = 0; i < G->Pnum; i++)
+  {
+    for(j = 0; j < gp[i].index; j++)
+    {
+      vertices[k] = gp[i].vertices[j];
+      //printf("vertices[k] %d ", vertices[k]);
+      k++;
+    }
+    //printf("%d ", gp[i].color);
+  }
+  //printf("\n");
+}
 
 void maximal_clique(Graph *G)
 {
@@ -132,7 +172,7 @@ void maximal_clique(Graph *G)
   {
   
     int psizes[G->Pnum];//each partite has how much nodes
-    int csizes[G->Pnum];//each partite has how much nodes
+    int csizes[G->Pnum];
     //memset(psizes, 0, Spart*sizeof(int));
     //memset(csizes, 0, Spart*sizeof(int));
     memset(psizes, 0, G->Pnum*sizeof(int));
@@ -144,6 +184,22 @@ void maximal_clique(Graph *G)
     }
     //printf("4444444444444444444444\n");
     GetConfig(confile, G);
+    /*printf("vertices: ");
+    for(i = 0; i < n; i++)
+    {printf("%s %d\t", G->_label[vertices[i]], G->_category[vertices[i]]);}
+    printf("\n");*/
+    GP gp[G->Pnum];
+    for(i = 0; i < G->Pnum; i++)
+    {
+      gp[i].color = i;
+      gp[i].size = psizes[i];
+    }
+    //qsort(gp, G->Pnum, sizeof(GP), cmp_gp);
+    order_vertex(G, psizes, vertices, gp);
+    /*printf("vertices: ");
+    for(i = 0; i < n; i++)
+    {printf("%s %d\t", G->_label[vertices[i]], G->_category[vertices[i]]);}
+    printf("\n");*/
     clique_find_v4(fp1, nclique, G, clique, vertices, 0, 0, n, csizes, psizes);
   }
   utime = get_cur_time() - utime;

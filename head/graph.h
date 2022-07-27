@@ -33,6 +33,13 @@ typedef struct graph_t {
   int Pnum;
 } Graph;
 
+typedef struct graphpartite_t
+{
+    int color;
+    int size;
+    int * vertices;
+    int index;
+}GP;
 
 /* Macros for Graph */
 

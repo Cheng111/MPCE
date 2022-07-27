@@ -426,8 +426,11 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
   //printf("lc ne ce %d %d %d\n", lc, ne, ce);
   for(i = 0; i < G->Pnum; i++)
   {
+	//printf("i, csizes[i], psizes[i] %d %d %d\n", i, csizes[i], psizes[i]);
 	  if(csizes[i] == 0 && psizes[i] == 0)
-	  {return;}
+	  {
+	//	printf("i %d\n", i);
+		return;}
   }
  
   while (ne < ce) 

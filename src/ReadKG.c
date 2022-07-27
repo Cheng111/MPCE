@@ -26,9 +26,13 @@ Graph * ReadKG(FILE *fp)
     int *ids = NULL;
     
     while ((read = getline(&line, &len, fp)) != -1) {
-        if(line[strlen(line) - 1] == '\n'){
+        while(line[strlen(line) - 1] == '\n'){
             line[strlen(line) - 1] = 0;
+            if(strlen(line) == 0)
+            {break;}
         }
+        if(strlen(line) == 0)
+        {continue;}
         pch = NULL;
         pch = strtok(line, " ");
         if(*pch == 'c')
@@ -50,7 +54,8 @@ Graph * ReadKG(FILE *fp)
             C = atoi(pch);
             //printf("N %d E %d C %d\n", N, E, C);
             G = graph_make(N);
-            (void) hcreate(N + C);
+            //the vertices names and color names cannot be the same because they are using a same hash table when search
+            (void) hcreate(N + C + 100);
             ids = (int *) malloc(N * sizeof(int));
             cids = (int *) malloc(C * sizeof(int));
             G->Pnum = C;

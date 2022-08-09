@@ -27,7 +27,7 @@ Graph * ReadKG(FILE *fp)
     int *ids = NULL;
     
     while ((read = getline(&line, &len, fp)) != -1) {
-        while(line[strlen(line) - 1] == '\n'){
+        while(line[strlen(line) - 1] == '\n' || line[strlen(line) - 1] == '\x0d'){
             line[strlen(line) - 1] = 0;
             if(strlen(line) == 0)
             {break;}
@@ -185,7 +185,7 @@ void GetConfig(char * confile, Graph * G)
     //printf("G->Pnum %d\n", G->Pnum);
     G->lbs = (int *) malloc(G->Pnum * sizeof(int));
     while ((read = getline(&line, &len, fconf)) != -1) {
-        while(line[strlen(line) - 1] == '\n'){
+        while(line[strlen(line) - 1] == '\n' || line[strlen(line) - 1] == '\x0d'){
             line[strlen(line) - 1] = 0;
             if(strlen(line) == 0)
             {break;}

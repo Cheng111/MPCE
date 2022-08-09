@@ -14,6 +14,7 @@ Graph * ReadKG(FILE *fp)
     char * word1;
     char * word2;
     char * color;
+    char * delim = " \t";
     ENTRY item;
     ENTRY *found_item;
     ENTRY citem;
@@ -34,23 +35,23 @@ Graph * ReadKG(FILE *fp)
         if(strlen(line) == 0)
         {continue;}
         pch = NULL;
-        pch = strtok(line, " ");
+        pch = strtok(line, delim);
         if(*pch == 'c')
         {continue;}
         else if(*pch == 'p')
         {
             char * edges = "edges";
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             if(strcmp(pch, edges) != 0)
             {
                 fprintf(stderr, "Bad file format : p edges N E C incorrect\n");
 	            exit(-1);
             }
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             N = atoi(pch);
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             E = atoi(pch);
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             C = atoi(pch);
             //printf("N %d E %d C %d\n", N, E, C);
             G = graph_make(N);
@@ -66,9 +67,9 @@ Graph * ReadKG(FILE *fp)
         }
         else if(*pch == 'e')
         {
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             word1 = pch;
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             word2 = pch;
             item.key = word1;
 	        if ((found_item = hsearch(item, FIND)) != NULL) {
@@ -107,9 +108,9 @@ Graph * ReadKG(FILE *fp)
         }
         else if(*pch == 'n')
         {
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             word1 = pch;
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             color = pch;
             //printf("word1 %s color %s\n", word1, color);
             item.key = word1;
@@ -171,6 +172,7 @@ void GetConfig(char * confile, Graph * G)
     size_t len;
     char * pch;
     ssize_t read;
+    char * delim = " \t";
     int i;
     const char * tlb = "lb";
     FILE * fconf;
@@ -183,14 +185,18 @@ void GetConfig(char * confile, Graph * G)
     //printf("G->Pnum %d\n", G->Pnum);
     G->lbs = (int *) malloc(G->Pnum * sizeof(int));
     while ((read = getline(&line, &len, fconf)) != -1) {
-        if(line[strlen(line) - 1] == '\n'){
+        while(line[strlen(line) - 1] == '\n'){
             line[strlen(line) - 1] = 0;
+            if(strlen(line) == 0)
+            {break;}
         }
+        if(strlen(line) == 0)
+        {continue;}
         pch = NULL;
-        pch = strtok(line, " ");
+        pch = strtok(line, delim);
         //printf("pch %s\n", pch);
         if(strcmp(pch, tlb) == 0){
-            pch = strtok (NULL, " ");
+            pch = strtok (NULL, delim);
             lb = atoi(pch);
             //printf("lb %d\n", lb);
             for(i = 0; i < G->Pnum; i++)

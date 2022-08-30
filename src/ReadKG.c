@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +21,8 @@ Graph * ReadKG(FILE *fp)
     ENTRY *found_item;
     ENTRY citem;
     ENTRY *found_citem;
+    struct hsearch_data *htab;
+    struct hsearch_data *htabc;
     int u, v = -1, cid = -1;
     int k=0, edges=0, cid_use = 0;
     Graph * G = NULL;
@@ -55,8 +59,12 @@ Graph * ReadKG(FILE *fp)
             C = atoi(pch);
             //printf("N %d E %d C %d\n", N, E, C);
             G = graph_make(N);
-            //the vertices names and color names cannot be the same because they are using a same hash table when search
-            (void) hcreate(N + C + 100);
+            //(void) hcreate(N + C + 100);
+            htab=calloc(1,sizeof(struct hsearch_data));
+            hcreate_r(N + 100,htab);
+            htabc=calloc(1,sizeof(struct hsearch_data));
+            hcreate_r(C + 100,htabc);
+
             ids = (int *) malloc(N * sizeof(int));
             cids = (int *) malloc(C * sizeof(int));
             G->Pnum = C;
@@ -72,7 +80,8 @@ Graph * ReadKG(FILE *fp)
             pch = strtok (NULL, delim);
             word2 = pch;
             item.key = word1;
-	        if ((found_item = hsearch(item, FIND)) != NULL) {
+	        //if ((found_item = hsearch(item, FIND)) != NULL) {
+            if (hsearch_r(item, FIND, &found_item, htab) != 0) {
 	            id = (int *) (found_item->data);
 	            u = *id;
 	        }
@@ -83,10 +92,12 @@ Graph * ReadKG(FILE *fp)
 	            item.key = G->_label[u];
 	            ids[u] = u;
 	            item.data = (void *) (ids+u);
-	            (void) hsearch(item, ENTER);
+	            //(void) hsearch(item, ENTER);
+                hsearch_r(item, ENTER, &found_item, htab);
 	        }
             item.key = word2;
-	        if ((found_item = hsearch(item, FIND)) != NULL) {
+	        //if ((found_item = hsearch(item, FIND)) != NULL) {
+            if (hsearch_r(item, FIND, &found_item, htab) != 0) {
 	            id = (int *) (found_item->data);
 	            v = *id;
 	        }
@@ -97,7 +108,8 @@ Graph * ReadKG(FILE *fp)
 	            item.key = G->_label[v];
 	            ids[v] = v;
 	            item.data = (void *) (ids+v);
-	            (void) hsearch(item, ENTER);
+	            //(void) hsearch(item, ENTER);
+                hsearch_r(item, ENTER, &found_item, htab);
 	        }
             if (k > N) {
 	            fprintf(stderr, "Bad file format : too many labels %d %d\n", k, N);
@@ -114,12 +126,14 @@ Graph * ReadKG(FILE *fp)
             color = pch;
             //printf("word1 %s color %s\n", word1, color);
             item.key = word1;
-	        if ((found_item = hsearch(item, FIND)) != NULL){
+	        //if ((found_item = hsearch(item, FIND)) != NULL){
+            if (hsearch_r(item, FIND, &found_item, htab) != 0) {
 	            id = (int *) (found_item->data);
 	            v = *id;
             }
             citem.key = color;
-            if ((found_citem = hsearch(citem, FIND)) != NULL){
+            //if ((found_citem = hsearch(citem, FIND)) != NULL){
+            if (hsearch_r(citem, FIND, &found_citem, htabc) != 0) {
 	            id = (int *) (found_citem->data);
 	            cid = *id;
             }
@@ -131,7 +145,8 @@ Graph * ReadKG(FILE *fp)
                 citem.key = G->_categoryname[cid];
                 //printf("G->_categoryname[cid] %s\n", G->_categoryname[cid]);
                 citem.data = (void *) (cids + cid);
-                hsearch(citem, ENTER);
+                //hsearch(citem, ENTER);
+                hsearch_r(citem, ENTER, &found_citem, htabc);
             }
             //printf("%s %d %s %d\n",word1, v, color, cid);
             G->_category[v] = cid;

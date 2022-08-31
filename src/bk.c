@@ -415,14 +415,14 @@ void clique_enumerate(FILE *fp, u64 *nclique, Graph *G, vid_t *cand, int lcand)
 void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes)
 {
-  //vid_t new[ce];
-  //int new_ne, new_ce;
-  vid_t u, pivot;
-  int i;//, j;
+  vid_t new[ce];
+  int new_ne, new_ce;
+  vid_t u, pivot, tmpu;
+  int i, j, pnei;//neibor of pivot vertex should be in P
   //vid_t newvertex[Spart][ce];
-  //int new_psizes[G->Pnum];
-  int upid;//, jpid;
-  //int parclique = 0;
+  int new_psizes[G->Pnum];
+  int upid, jpid;
+  int parclique = 0;
   //printf("lc ne ce %d %d %d\n", lc, ne, ce);
   for(i = 0; i < G->Pnum; i++)
   {
@@ -432,37 +432,31 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 	//	printf("i %d\n", i);
 		return;}
   }
-
- pivot = old[ne];
-	upid = G->_category[pivot];
-	clique_find_v4_sub(pivot, G, ne, ce, upid, fp, nclique, clique, csizes, lc, old);
-	ne++;
+  pivot = old[ne];
+  pnei = ce -1;
   while (ne < ce) 
   {
 	u = old[ne];
-	//upid = G->_category[u];
-	//tmp(u, G, ne, ce, upid, fp, nclique, clique, csizes, lc);
-	if(edge_exists(G, u, pivot) || (G->_category[u] == G->_category[pivot]))
+	upid = G->_category[u];
+	if (u != pivot)
 	{
-		ne++;
-		continue;}
-	clique_find_v4_sub(u, G, ne, ce, upid, fp, nclique, clique, csizes, lc, old);
-	
-	ne++;
+		if(edge_exists(G, u, pivot) || (G->_category[u] == G->_category[pivot]))
+		{
+			//ne++;
+			tmpu = u;
+			old[ne] = old[pnei];
+			old[pnei] = u;
+			pnei--;
+			//if(pnei < ne)
+			//{break;}
 
-
+			continue;
+		}
+	}
+	if(pnei < ne)
+	{break;}
+	//printf("ne u category label %d %d %s %s\n", ne, u, G->_categoryname[G->_category[u]], G->_label[u]);
 	/* Set new cand and not */
-	
-  }
-
-}
-
-void clique_find_v4_sub(vid_t u, Graph * G, int ne, int ce, int upid, FILE *fp, u64 *nclique, vid_t *clique, int * csizes, int lc, vid_t *old)
-{
-	vid_t new[ce];
-	int new_psizes[G->Pnum];
-	int new_ne, new_ce;
-	int jpid, parclique, i, j;
 	memset(new, -1, ce*sizeof(vid_t));
 	memset(new_psizes, 0, G->Pnum * sizeof(int));
     new_ne = 0;
@@ -532,5 +526,8 @@ void clique_find_v4_sub(vid_t u, Graph * G, int ne, int ce, int upid, FILE *fp, 
 	  }
 	  if (j == ce) return;
 	}
+
+
+  }
 
 }

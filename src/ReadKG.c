@@ -131,6 +131,16 @@ Graph * ReadKG(FILE *fp)
 	            id = (int *) (found_item->data);
 	            v = *id;
             }
+            else {
+	            v = k;
+	            G->_label[k++] = strdup(word1);
+                //printf("G->_label[k++] u %s %d %d\n", word1, u, k);
+	            item.key = G->_label[v];
+	            ids[v] = v;
+	            item.data = (void *) (ids+v);
+	            //(void) hsearch(item, ENTER);
+                hsearch_r(item, ENTER, &found_item, htab);
+	        }
             citem.key = color;
             //if ((found_citem = hsearch(citem, FIND)) != NULL){
             if (hsearch_r(citem, FIND, &found_citem, htabc) != 0) {

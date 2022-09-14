@@ -417,7 +417,7 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 {
   vid_t new[ce];
   int new_ne, new_ce;
-  vid_t u, pivot, tmpu;
+  vid_t u, pivot;
   int i, j, pnei;//neibor of pivot vertex should be in P
   //vid_t newvertex[Spart][ce];
   int new_psizes[G->Pnum];
@@ -443,7 +443,7 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 		if(edge_exists(G, u, pivot) || (G->_category[u] == G->_category[pivot]))
 		{
 			//ne++;
-			tmpu = u;
+			//tmpu = u;
 			old[ne] = old[pnei];
 			old[pnei] = u;
 			pnei--;
@@ -530,4 +530,140 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 
   }
 
+}
+
+void clique_find_v5(FILE *fp, u64 *nclique, Graph *G, \
+		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes)
+{
+	int i, j, k;
+	GP * gp;
+	vid_t u, v;
+	for(k = 0; k < G->Pnum; k++ )
+	{
+
+		gp = G->gps + k;
+		for(i = 0; i < gp->size; i++)
+		{
+			for(j = i + 1; j < gp->size; j++)
+			{
+				u = old[gp->vertices[i]];
+				v = old[gp->vertices[j]];
+				add_edge(G, u, v);
+			}
+		}
+	}
+	clique_find_v5_sub(fp, nclique, G, clique, old, lc, ne, ce, csizes);
+}
+
+void clique_find_v5_sub(FILE *fp, u64 *nclique, Graph *G, \
+		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes)
+{
+  vid_t new[ce];
+  int new_ne, new_ce;
+  vid_t fixp=0, p, u;
+  int s=0, pos=0, nod, minnod, count;
+  int i, j, k;
+  int upid;
+  int parclique;
+
+  if (lc + (ce - ne) < LB) return;
+
+#ifdef DEBUG
+  for (i = 0; i < ne; i++) printf(" %s", G->_label[old[i]]);
+  printf("\t|");
+  for (i = 0; i < lc; i++) printf(" %s", G->_label[clique[i]]);
+  printf("\t|");
+  for (i = ne; i < ce; i++) printf(" %s", G->_label[old[i]]);
+  printf("\n");
+#endif
+
+  /* Choose a vertex, fixp, in old (both not and cand) that
+	 has lowest number of non-adjacent vertices in old cand */
+  minnod = ce + 1;
+  nod = 0;
+  for (i = 0; i < ce; i++) {
+	count = 0;
+	p = old[i];
+	for (j = ne; j < ce; j++) {
+	  if (!edge_exists(G, p, old[j])) {
+		count++;
+		pos = j;
+	  }
+	}
+	if (count < minnod) {
+	  fixp = p;
+	  minnod = count;
+	  if (i < ne) { s = pos; }    // if p in not
+	  else { s = i; nod = 1; }    // if p in cand
+	}
+  }
+  
+  /* Recursively extend clique */
+  for (k = minnod+nod; k > 0; k--) {
+
+	/* Swap this candidate to be the next one */
+	p = old[s];
+	old[s] = old[ne];
+	old[ne] = p;
+
+	u = old[ne];
+
+	/* Set new cand and not */
+	memset(new, -1, ce*sizeof(vid_t));
+    new_ne = 0;
+	for (j = 0; j < ne; j++)
+	  if (edge_exists(G, u, old[j])) new[new_ne++] = old[j];
+	new_ce = new_ne;
+	for (j = ne+1; j < ce; j++)
+	  if (edge_exists(G, u, old[j])) new[new_ce++] = old[j];
+	
+	/* Output clique or extend */
+	clique[lc] = u;
+	upid = G->_category[u];
+	csizes[upid]++;
+	if (lc+1 <= UB) {
+	  if (new_ce == 0 && lc+1 >= LB) 
+	  {
+			//printf("hahahah LB %d\n", LB);
+			nclique[lc+1]++;
+			parclique = 0;
+		//printf("????????\n");
+		for(i = 0; i < G->Pnum; i++)
+		{
+			//printf("i %d %d\n", i, csizes[i]);
+			//if(csizes[i] == 0)
+			//printf("csizes[i] G->lbs[i] %d %d\n", csizes[i], G->lbs[i]);
+			if(csizes[i] < G->lbs[i])
+			{
+				//printf("%d, %d, %d\n", i, csizes[i], G->lbs[i]);
+				parclique = 1;
+				break;
+			}
+		}
+		if(PRINT && (parclique == 0))
+		{
+			clique_out(fp, G, clique, lc+1);
+		}
+	  }
+	  else if (new_ne < new_ce) 
+	  {
+	    clique_find_v5_sub(fp, nclique, G, clique, new, lc+1, new_ne, new_ce, csizes);
+	  }
+	}
+	csizes[upid]--;
+	
+	/* Move u to not */
+	ne++;
+
+	/* Bound condition: Stop if fixp is a neighbor of all candidates */ 
+    if (k > 1) {
+	  for (s = ne; s < ce; s++) {
+	    if (!edge_exists(G, fixp, old[s])) break;
+	  }
+	  if (s == ce) return;
+	}
+
+  }
+
+  return;
 }

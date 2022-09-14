@@ -15,6 +15,14 @@ typedef unsigned short vid_t;
 
 /** Data structure **/
 
+typedef struct graphpartite_t
+{
+    int color;
+    int size;
+    int * vertices;
+    int index;
+}GP;
+
 /* data structure of a graph */
 typedef struct graph_t {
   unsigned int _num_vertices;  /* total number of vertices in graph */
@@ -31,15 +39,8 @@ typedef struct graph_t {
   int * psizes;
   int * lbs;
   int Pnum;
+  GP * gps;
 } Graph;
-
-typedef struct graphpartite_t
-{
-    int color;
-    int size;
-    int * vertices;
-    int index;
-}GP;
 
 /* Macros for Graph */
 

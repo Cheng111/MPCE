@@ -1,7 +1,7 @@
 # MPCE
 maximal partiteclique enumaration
 
-##Usage
+## Usage
 Usage: ./mpce Graph <options>
 Options:
 -p				print out clique list

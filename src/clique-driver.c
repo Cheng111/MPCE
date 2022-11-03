@@ -47,7 +47,7 @@ void print_options(void)
   fprintf(stderr, "                 2 - bron kerbosch version 2 (improved version)\n");
   fprintf(stderr, "                 3 - modified bron kerbosch to find maximum clique\n");
   fprintf(stderr, "                 4 - maximal partite cliques enumration (BK with piivot)\n");
-  fprintf(stderr, "                 4 - maximal partite cliques enumration (add intra-partite edges)\n");
+  fprintf(stderr, "                 5 - maximal partite cliques enumration (add intra-partite edges)\n");
   fprintf(stderr, "  --fconf        configure file of maximal partite cliques enumration\n");
   fprintf(stderr, "\n");
 }

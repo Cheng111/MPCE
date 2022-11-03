@@ -3,9 +3,13 @@ maximal partiteclique enumaration
 
 ## Usage
 Usage: ./mpce Graph <options>
+	
 Options:
-\-p				print out clique list
+	
+-p				print out clique list
+	
 				note: no print out if not specify -p
+	
 -o <filename>	filename to store cliques if choose to print out
 				print to stdout if not specify -o
 -l <value>		least number of vertices in a clique <default = 3>

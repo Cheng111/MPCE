@@ -2,10 +2,9 @@
 maximal partiteclique enumaration
 
 ## Usage
+```
 Usage: ./mpce Graph <options>
-	
 Options:
-	
 -p				print out clique list
 	
 				note: no print out if not specify -p
@@ -21,7 +20,7 @@ Options:
 					4 - maximal partite cliques enumration (BK with piivot)
 					5 - maximal partite cliques enumration (add intra-partite edges)
 --fconf			configure file of maximal partite cliques enumration
-
+```
 ## example usage
 - Maximal k-partite clique enumration
     - ./mpce test/test_K222.txt -v 4 --fconf kpartite.conf -p

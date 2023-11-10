@@ -477,7 +477,7 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 	  {
 		  jpid = G->_category[old[j]];
 		  new_psizes[jpid]++;
-		  new[new_ce++] = old[j];
+		  new[new_ce++] = old[j];//add N(u) nad P(u)(same partite set) to X
 	  }
 	}
 	

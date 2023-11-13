@@ -53,5 +53,8 @@ void clique_find_v5(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes);
 void clique_find_v5_sub(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes);
+
+void clique_find_v6(FILE *fp, u64 *nclique, Graph *G, \
+		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes);
 #endif
 

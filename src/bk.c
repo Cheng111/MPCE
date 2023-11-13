@@ -123,15 +123,17 @@ void clique_find_v1(FILE *fp, u64 *nclique, Graph *G, \
 	/* Set new cand and not */
 	memset(new, -1, ce*sizeof(vid_t));
     new_ne = 0;
+	// X intersection N(u)
 	for (j = 0; j < ne; j++)
 	  if (edge_exists(G, u, old[j])) new[new_ne++] = old[j];
 	new_ce = new_ne;
+	// p intersection N(u)
 	for (j = ne+1; j < ce; j++)
 	  if (edge_exists(G, u, old[j])) new[new_ce++] = old[j];
 	
 	/* Output clique or extend */
 	clique[lc] = u;
-	if (new_ce == 0 && lc+1 >= LB) {
+	if (new_ce == 0 && lc+1 >= LB) { //P U X = empty
 	  nclique[lc+1]++;
 	  //fprint("hahahah LB %d\n", LB);
 	  if (PRINT) clique_out(fp, G, clique, lc+1);
@@ -415,6 +417,7 @@ void clique_enumerate(FILE *fp, u64 *nclique, Graph *G, vid_t *cand, int lcand)
 void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes)
 {
+//	printf("v4v4v4v4\n");
   vid_t new[ce];
   int new_ne, new_ce;
   vid_t u, pivot;
@@ -424,6 +427,7 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
   int upid, jpid;
   int parclique = 0;
   //printf("lc ne ce %d %d %d\n", lc, ne, ce);
+  //printf("lc ne ce G->Pnum %d %d %d %d\n", lc, ne, ce, G->Pnum);
   for(i = 0; i < G->Pnum; i++)
   {
 	//printf("i, csizes[i], psizes[i] %d %d %d\n", i, csizes[i], psizes[i]);
@@ -666,4 +670,168 @@ void clique_find_v5_sub(FILE *fp, u64 *nclique, Graph *G, \
   }
 
   return;
+}
+
+void clique_find_v6(FILE *fp, u64 *nclique, Graph *G, \
+		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes)
+{
+	//printf("v6v6v6v6\n");
+  vid_t new[ce];
+  int new_ne, new_ce;
+  vid_t u, pivot;
+  int i, j, pnei;//neibor of pivot vertex should be in P
+  int ne_copy = ne;
+  int flag_color;
+  //vid_t newvertex[Spart][ce];
+  int new_psizes[G->Pnum];
+  int upid, jpid;
+  int parclique = 0;
+  //printf("lc ne ce G->Pnum %d %d %d %d\n", lc, ne, ce, G->Pnum);
+  for(i = 0; i < G->Pnum; i++)
+  {
+	//printf("i, csizes[i], psizes[i] %d %d %d\n", i, csizes[i], psizes[i]);
+	  if(csizes[i] == 0 && psizes[i] == 0)
+	  {
+	//	printf("i %d\n", i);
+		return;}
+  }
+  flag_color = ce - 1;
+  if(lc < G->Pnum)
+  {
+	//flag_color = ce - 1;
+	ne_copy = ne;
+	while(ne_copy < ce)
+	{
+		u = old[ne_copy];
+		//printf("u %d csizes[G->_category[u]] %d G->_category[u] %d G->_label[u] %s ne_copy %d flag_color %d\n", u, csizes[G->_category[u]], G->_category[u], G->_label[u], ne_copy, flag_color);
+		if (csizes[G->_category[u]] > 0)
+		{
+
+			old[ne_copy] = old[flag_color];
+			old[flag_color] = u;
+			flag_color--;
+			//printf("pnei %d\n", pnei);
+			if(flag_color < ne_copy)
+			{
+				//printf("flag_color break\n");
+				break;
+				}
+			//continue;
+		}
+		else
+		{
+			ne_copy++;
+			if(flag_color < ne_copy)
+			{break;}
+		}
+	}
+	pnei = flag_color;
+  }
+  else
+  {
+	pnei = ce -1;
+	pivot = old[ne];
+	//pnei = ce -1;
+	ne_copy = ne;
+	while(ne_copy <= pnei)
+	{
+		u = old[ne_copy];
+		//printf("pnei %d ne_copy %d\n", pnei, ne_copy);
+		if (u != pivot)
+		{
+			if(edge_exists(G, u, pivot) || (G->_category[u] == G->_category[pivot]))
+			{
+				//ne++;
+				//tmpu = u;
+				old[ne_copy] = old[pnei];
+				old[pnei] = u;
+				pnei--;
+				//printf("pnei %d ne_copy %d\n", pnei, ne_copy);
+				if(pnei < ne_copy)
+				{break;}
+
+				continue;
+			}
+		}
+		ne_copy++;
+		if(pnei < ne_copy)
+		{break;}
+	}
+  }
+  //while (ne < ce)
+  while (ne <= pnei) 
+  {
+	u = old[ne];
+	upid = G->_category[u];
+	memset(new, -1, ce*sizeof(vid_t));
+	memset(new_psizes, 0, G->Pnum * sizeof(int));
+    new_ne = 0;
+	for (j = 0; j < ne; j++)
+	{
+	  if (edge_exists(G, u, old[j]) || (G->_category[old[j]] == G->_category[u])) 
+	  {
+		  jpid = G->_category[old[j]];
+		  //newvertex[jpid][new_psizes[jpid]] = old[j];
+		  //new_psizes[jpid]++;
+		  new[new_ne++] = old[j];
+	  }
+	}
+	new_ce = new_ne;
+	for (j = ne+1; j < ce; j++)
+	{
+	  if (edge_exists(G, u, old[j]) || (G->_category[old[j]] == G->_category[u]))
+	  {
+		  jpid = G->_category[old[j]];
+		  new_psizes[jpid]++;
+		  new[new_ce++] = old[j];//add N(u) nad P(u)(same partite set) to X
+	  }
+	}
+	
+	/* Output clique or extend */
+	upid = G->_category[u];
+	clique[lc] = u;
+	csizes[upid]++;
+	//printf("new_ce %d\n", new_ce);
+	if(new_ce == 0) 
+	{
+	  parclique = 0;
+	  //printf("????????\n");
+	  for(i = 0; i < G->Pnum; i++)
+	  {
+		  if(csizes[i] < G->lbs[i])
+		  {
+			  //printf("%d, %d, %d\n", i, csizes[i], G->lbs[i]);
+			  parclique = 1;
+			  break;
+		  }
+	  }
+	  if(parclique == 0)
+	  {
+		  nclique[lc+1]++;
+	    //print("hahahah LB %d\n", LB);
+	  	if (PRINT) clique_out(fp, G, clique, lc+1);
+	  }
+	}
+	else { 
+	  if (new_ne < new_ce)
+	    clique_find_v6(fp, nclique, G, clique, new, lc+1, new_ne, new_ce, csizes, new_psizes);
+	}
+	csizes[upid]--;
+
+	
+	/* Move u to not */
+	ne++;
+
+	/* Bound condition: Stop if any not is a neighbor of all candidates */ 
+    for (i = 0; i < ne; i++) {
+	  for (j = ne; j < ce; j++) {
+	    //if (!edge_exists(G, old[i], old[j])) break;
+		if (!(edge_exists(G, old[i], old[j]) || (G->_category[old[i]] == G->_category[old[j]]) )) break;
+	  }
+	  if (j == ce) return;
+	}
+
+
+  }
+
 }

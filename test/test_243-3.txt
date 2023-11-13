@@ -1,5 +1,14 @@
 c
 p edges 9 22 3
+n 0 red
+n 1 red
+n 2 green
+n 3 green
+n 4 green
+n 5 green
+n 6 blue
+n 7 blue
+n 8 blue
 e 0 2
 e 0 3
 e 0 4
@@ -22,12 +31,3 @@ e 4 7
 e 4 8
 e 5 8
 e 5 7
-n 0 red
-n 1 red
-n 2 green
-n 3 green
-n 4 green
-n 5 green
-n 6 blue
-n 7 blue
-n 8 blue

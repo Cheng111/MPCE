@@ -1,0 +1,6 @@
+# ignore all test output files
+test/*.profile
+
+# ignore some test function files
+head/intSet.h
+src/intSet.ctmp

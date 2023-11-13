@@ -21,8 +21,8 @@ Graph * ReadKG(FILE *fp)
     ENTRY *found_item;
     ENTRY citem;
     ENTRY *found_citem;
-    struct hsearch_data *htab;
-    struct hsearch_data *htabc;
+    struct hsearch_data *htab = NULL;
+    struct hsearch_data *htabc = NULL;
     int u, v = -1, cid = -1;
     int k=0, edges=0, cid_use = 0;
     Graph * G = NULL;

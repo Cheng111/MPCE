@@ -13,7 +13,7 @@
 #include "ReadKG.h"
 
 //char * FilterName;
-char * confile;
+//char * confile;
 char C1[100];
 char C2[100];
 char C3[100];

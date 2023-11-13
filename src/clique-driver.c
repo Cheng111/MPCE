@@ -48,6 +48,7 @@ void print_options(void)
   fprintf(stderr, "                 3 - modified bron kerbosch to find maximum clique\n");
   fprintf(stderr, "                 4 - maximal partite cliques enumration (BK with piivot)\n");
   fprintf(stderr, "                 5 - maximal partite cliques enumration (add intra-partite edges)\n");
+  fprintf(stderr, "                 6 - maximal partite cliques enumration (pick up k different partite set vertices first)\n");
   fprintf(stderr, "  --fconf        configure file of maximal partite cliques enumration\n");
   fprintf(stderr, "\n");
 }
@@ -102,10 +103,9 @@ void argument_parse(int argc, char **argv)
   return;
 }
 
-int cmp_gp(GP *a, GP *b)
-{
-    //GP *a1 = (GP *)a;
-    //GP *a2 = (GP *)b;
+int cmp_gp(const void *gp1, const void *gp2) {
+    const GP *a = (const GP *)gp1;
+    const GP *b = (const GP *)gp2;
     if (a->size > b->size) {return 1;}
     else if (a->size < b->size) {return -1;}
     else {return 0;}
@@ -160,7 +160,17 @@ void maximal_clique(Graph *G)
     sprintf(fname, "%s.clique", outfn);
     fp1 = fopen(fname, "w");
   }
-  sprintf(fname, "%s.profile", infn);
+  //sprintf(fname, "%s.profile", infn);
+  //snprintf(fname, sizeof(fname), "%s.profile", infn);
+  if (strlen(infn) + strlen(".profile") >= sizeof(fname)) {
+      // Truncate infn to fit the buffer
+      strncpy(fname, infn, sizeof(fname) - strlen(".profile") - 1);
+      strcat(fname, ".profile");
+  } else {
+      snprintf(fname, sizeof(fname), "%s.profile", infn);
+  }
+
+
   fp2 = fopen(fname, "w");
 
   utime = get_cur_time();
@@ -171,7 +181,7 @@ void maximal_clique(Graph *G)
 	{clique_find_v1(fp1, nclique, G, clique, vertices, 0, 0, n);}
   else if (VERSION == 2)
 	{clique_find_v2(fp1, nclique, G, clique, vertices, 0, 0, n);}
-  else if(VERSION == 4 || VERSION == 5)
+  else if(VERSION == 4 || VERSION == 5 || VERSION == 6)
   {
   
     int psizes[G->Pnum];//each partite has how much nodes
@@ -201,14 +211,18 @@ void maximal_clique(Graph *G)
       gp[i].size = psizes[i];
     }
     //qsort(gp, G->Pnum, sizeof(GP), cmp_gp);
-    order_vertex(G, psizes, vertices, gp);
+    //order_vertex(G, psizes, vertices, gp);
     if(VERSION == 5)
     {
       clique_find_v5(fp1, nclique, G, clique, vertices, 0, 0, n, csizes);
     }
-    else
+    else if (VERSION == 4)
     {
       clique_find_v4(fp1, nclique, G, clique, vertices, 0, 0, n, csizes, psizes);
+    }
+    else if(VERSION == 6)
+    {
+      clique_find_v6(fp1, nclique, G, clique, vertices, 0, 0, n, csizes, psizes);
     }
   }
   utime = get_cur_time() - utime;

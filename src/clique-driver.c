@@ -214,6 +214,7 @@ void maximal_clique(Graph *G)
     //order_vertex(G, psizes, vertices, gp);
     if(VERSION == 5)
     {
+      order_vertex(G, psizes, vertices, gp);
       clique_find_v5(fp1, nclique, G, clique, vertices, 0, 0, n, csizes);
     }
     else if (VERSION == 4)

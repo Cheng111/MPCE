@@ -629,7 +629,7 @@ void clique_find_v5_sub(FILE *fp, u64 *nclique, Graph *G, \
 	  if (new_ce == 0 && lc+1 >= LB) 
 	  {
 			//printf("hahahah LB %d\n", LB);
-			nclique[lc+1]++;
+			//nclique[lc+1]++;
 			parclique = 0;
 		//printf("????????\n");
 		for(i = 0; i < G->Pnum; i++)
@@ -646,6 +646,7 @@ void clique_find_v5_sub(FILE *fp, u64 *nclique, Graph *G, \
 		}
 		if(PRINT && (parclique == 0))
 		{
+			nclique[lc+1]++;
 			clique_out(fp, G, clique, lc+1);
 		}
 	  }
@@ -687,14 +688,14 @@ void clique_find_v6(FILE *fp, u64 *nclique, Graph *G, \
   int upid, jpid;
   int parclique = 0;
   //printf("lc ne ce G->Pnum %d %d %d %d\n", lc, ne, ce, G->Pnum);
-  for(i = 0; i < G->Pnum; i++)
+  /*for(i = 0; i < G->Pnum; i++)
   {
 	//printf("i, csizes[i], psizes[i] %d %d %d\n", i, csizes[i], psizes[i]);
 	  if(csizes[i] == 0 && psizes[i] == 0)
 	  {
 	//	printf("i %d\n", i);
 		return;}
-  }
+  }*/
   flag_color = ce - 1;
   if(lc < G->Pnum)
   {

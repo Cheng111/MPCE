@@ -127,7 +127,7 @@ void order_vertex(Graph *G, int psizes[], vid_t * vertices, GP * gp)
     (gp[c].vertices)[gp[c].index] = i;
     gp[c].index = gp[c].index + 1;
   }
-  if(VERSION == 5)
+  if((VERSION == 5) | (VERSION == 7))
   {return;}
   qsort(gp, G->Pnum, sizeof(GP), cmp_gp);
   //printf("sorted gp ");
@@ -181,7 +181,7 @@ void maximal_clique(Graph *G)
 	{clique_find_v1(fp1, nclique, G, clique, vertices, 0, 0, n);}
   else if (VERSION == 2)
 	{clique_find_v2(fp1, nclique, G, clique, vertices, 0, 0, n);}
-  else if(VERSION == 4 || VERSION == 5 || VERSION == 6)
+  else
   {
   
     int psizes[G->Pnum];//each partite has how much nodes
@@ -225,6 +225,11 @@ void maximal_clique(Graph *G)
     {
       clique_find_v6(fp1, nclique, G, clique, vertices, 0, 0, n, csizes, psizes);
     }
+    else if(VERSION == 7)
+    {
+      order_vertex(G, psizes, vertices, gp);
+      clique_find_v7(fp1, nclique, G, clique, vertices, 0, 0, n, csizes);
+    }
   }
   utime = get_cur_time() - utime;
 
@@ -237,53 +242,6 @@ void maximal_clique(Graph *G)
   fclose(fp2);
 
 }
-
-/*void maximal_clique_v4(Graph *G)
-{
-  FILE *fp1=stdout, *fp2;
-  char fname[100];
-  double utime;
-  unsigned int n = num_vertices(G);
-  //vid_t clique[Spart][n];
-  vid_t clique[n];
-  vid_t vertices[Spart][n];
-  vid_t X[Spart][n];
-  int psizes[Spart];//each partite has how much nodes
-  int csizes[Spart];//each partite has how much nodes
-  int xsizes[Spart];
-  int pid;//partite ID
-  u64 nclique[n+1];
-  int i;
-
-  if (outfn != NULL) {
-    sprintf(fname, "%s.clique", outfn);
-    fp1 = fopen(fname, "w");
-  }
-  sprintf(fname, "%s.profile", infn);
-  fp2 = fopen(fname, "w");
-
-  utime = get_cur_time();
-  memset(nclique, 0, (n+1)*sizeof(u64));
-  //memset(clique, -1, (Spart * n)*sizeof(vid_t));
-  memset(clique, -1, n*sizeof(vid_t));
-  //memset(vertices, -1, (Spart * n)*sizeof(vid_t));
-  memset(X, -1, (Spart * n)*sizeof(vid_t));
-  memset(psizes, 0, Spart*sizeof(int));
-  memset(csizes, 0, Spart*sizeof(int));
-  memset(xsizes, 0, Spart*sizeof(int));
-
-  for (i = 0; i < n; i++)
-  {
-    pid = G->_category[i];
-    vertices[pid][sizes[pid]] = i;
-    G->_intraid[i] = psizes[pid];
-    psizes[pid]++;
-  }
-  clique_find_v4(fp1, nclique, G, clique, vertices, csizes, 0, n, psizes);
-  
-
-
-}*/
 
 void maximum_clique(Graph *G)
 {

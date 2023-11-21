@@ -4,3 +4,4 @@ test/*.profile
 # ignore some test function files
 head/intSet.h
 src/intSet.ctmp
+obj/*.o

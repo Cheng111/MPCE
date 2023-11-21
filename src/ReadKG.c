@@ -184,7 +184,8 @@ void printGraph(Graph * G, FILE * fout)
     int i;
     //unsigned int v;
     //unsigned int * tmp;
-    AdjMatrix_out(fout, G);
+    if(fout != NULL)
+    {AdjMatrix_out(fout, G);}
     for(i = 0; i < G->_num_vertices; i++)
     {
         printf("node %d %s color %d %s\n", i, G->_label[i], G->_category[i], G->_categoryname[G->_category[i]]);

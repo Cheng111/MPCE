@@ -10,7 +10,7 @@ PTHREADS = -lpthread
 TESTFLAGS = #-DPERFORMANCE -DDEBUG
 LFSFLAG = -D_FILE_OFFSET_BITS=64
 
-OBJECTS = clique-driver.o graph.o utility.o bk.o ReadKG.o
+OBJECTS = clique-driver.o graph.o utility.o bk.o ReadKG.o bk-addition.o
 HEADERS = graph.h utility.h bk.h ReadKG.h
 EXECUTABLE = mpce
 

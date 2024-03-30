@@ -230,6 +230,10 @@ void maximal_clique(Graph *G)
       order_vertex(G, psizes, vertices, gp);
       clique_find_v7(fp1, nclique, G, clique, vertices, 0, 0, n, csizes);
     }
+    else if (VERSION == 8)
+    {
+      clique_find_v8(fp1, nclique, G, clique, vertices, 0, 0, n, csizes, psizes);
+    }
   }
   utime = get_cur_time() - utime;
 

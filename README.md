@@ -17,8 +17,10 @@ Options:
 					1 - bron kerbosch version 1 (numerical order)
 					2 - bron kerbosch version 2 (improved version)
 					3 - modified bron kerbosch to find maximum clique
-					4 - maximal partite cliques enumration (BK with piivot)
+					4 - maximal partite cliques enumration (BK with piivot).Terminate when the candidate set from one partite is empty and no vertex from this partite is present in the current clique.
 					5 - maximal partite cliques enumration (add intra-partite edges)
+                    6 - maximal partite cliques enumration (pick up k different partite set vertices first)\n"
+                    8 - maximal partite cliques enumration (BK with piivot).
 --fconf			configure file of maximal partite cliques enumration
 ```
 ## example usage

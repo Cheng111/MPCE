@@ -403,8 +403,11 @@ void clique_enumerate(FILE *fp, u64 *nclique, Graph *G, vid_t *cand, int lcand)
 
 /* ------------------------------------------------------------- *
  * Function: clique_find_v4()                                    *
- *   Bron-Kerbosch version 4 : numerical order                   *
+ *   Bron-Kerbosch version 4 : numerical order with pivot        *
  *   Recursive function to find k-partite cliques                *
+ *   Terminate when the candidate set from one partite is empty  *
+ *   and no vertex from this partite is present in the current   *
+ *   clique.                                                     *
  * ------------------------------------------------------------- */
  //vid_t *clique(R): current clique
  //vid_t *old(P): X cascade P

@@ -1,5 +1,6 @@
 # ignore all test output files
 test/*.profile
+test/*.output
 
 # ignore some test function files
 head/intSet.h

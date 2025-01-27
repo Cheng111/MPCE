@@ -409,14 +409,12 @@ void clique_enumerate(FILE *fp, u64 *nclique, Graph *G, vid_t *cand, int lcand)
  *   and no vertex from this partite is present in the current   *
  *   clique.                                                     *
  * ------------------------------------------------------------- */
- //vid_t *clique(R): current clique
- //vid_t *old(P): X cascade P
- //ne: size of X
- //ce: size of X + P
-//nclique: used for hist graph for clique length
-//lc: clique length - 1
-/*void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
-		vid_t *clique, vid_t *old, int * csizes[], int lc, int ne, int ce, int psizes[])*/
+ /* vid_t *clique(R): current clique
+ 	vid_t *old(P): X cascade P
+	ne: size of X
+	ce: size of X + P
+	nclique: used for hist graph for clique length
+	lc: clique length - 1 */
 void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes)
 {
@@ -676,6 +674,23 @@ void clique_find_v5_sub(FILE *fp, u64 *nclique, Graph *G, \
   return;
 }
 
+/* ------------------------------------------------------------- 
+ * Function: clique_find_v6()                                    
+ *   Bron-Kerbosch version 6 : numerical order with pivot        
+ *   Recursive function to find k-partite cliques                
+ *  1. Terminate when the candidate set from one partite is empty
+ *   and no vertex from this partite is present in the current   
+ *   clique.
+ *  2. The first k vertices in the candidate clique set are from 
+ * 	 the k different partite sets.                                                     
+ * ------------------------------------------------------------- */
+ /* vid_t *clique(R): current clique
+ 	vid_t *old(P): X cascade P
+	ne: size of X
+	ce: size of X + P
+	nclique: used for hist graph for clique length
+	lc: clique length - 1 */
+
 void clique_find_v6(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes)
 {
@@ -691,14 +706,14 @@ void clique_find_v6(FILE *fp, u64 *nclique, Graph *G, \
   int upid, jpid;
   int parclique = 0;
   //printf("lc ne ce G->Pnum %d %d %d %d\n", lc, ne, ce, G->Pnum);
-  /*for(i = 0; i < G->Pnum; i++)
+  for(i = 0; i < G->Pnum; i++)
   {
 	//printf("i, csizes[i], psizes[i] %d %d %d\n", i, csizes[i], psizes[i]);
 	  if(csizes[i] == 0 && psizes[i] == 0)
 	  {
 	//	printf("i %d\n", i);
 		return;}
-  }*/
+  }
   flag_color = ce - 1;
   if(lc < G->Pnum)
   {

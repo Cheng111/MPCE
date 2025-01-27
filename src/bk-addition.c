@@ -157,19 +157,17 @@ void clique_find_v7_sub(FILE *fp, u64 *nclique, Graph *G, \
 
 /* ------------------------------------------------------------- *
  * Function: clique_find_v8()                                    *
- *   Bron-Kerbosch version 8 : numerical order                   *
- *   Recursive function to find k-partite cliques                *
+ *   Bron-Kerbosch version 8 : BK with pivot on kpartite graph.  *
  * ------------------------------------------------------------- */
- //vid_t *clique(R): current clique
- //vid_t *old(P): X cascade P
- //ne: size of X
- //ce: size of X + P
-//nclique: used for hist graph for clique length
-//lc: clique length - 1
+ /* vid_t *clique(R): current clique
+ 	vid_t *old(P): X cascade P
+	ne: size of X
+	ce: size of X + P
+	nclique: used for hist graph for clique length
+	lc: clique length - 1 */
 void clique_find_v8(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes)
 {
-//	printf("v4v4v4v4\n");
   vid_t new[ce];
   int new_ne, new_ce;
   vid_t u, pivot;
@@ -259,7 +257,7 @@ void clique_find_v8(FILE *fp, u64 *nclique, Graph *G, \
 	}
 	else { 
 	  if (new_ne < new_ce)
-	    clique_find_v4(fp, nclique, G, clique, new, lc+1, new_ne, new_ce, csizes, new_psizes);
+	    clique_find_v8(fp, nclique, G, clique, new, lc+1, new_ne, new_ce, csizes, new_psizes);
 	}
 	csizes[upid]--;
 

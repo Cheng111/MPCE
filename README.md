@@ -19,7 +19,7 @@ Options:
 					3 - modified bron kerbosch to find maximum clique
 					4 - maximal partite cliques enumration (BK with piivot).Terminate when the candidate set from one partite is empty and no vertex from this partite is present in the current clique.
 					5 - maximal partite cliques enumration (add intra-partite edges)
-                    6 - maximal partite cliques enumration (pick up k different partite set vertices first)\n"
+                    6 - maximal partite cliques enumration (a. Terminate when the candidate set from one partite is empty and no vertex from this partite is present in the current clique. b.pick up k different partite set vertices first)\n"
                     8 - maximal partite cliques enumration (BK with piivot).
 --fconf			configure file of maximal partite cliques enumration
 ```
@@ -27,6 +27,7 @@ Options:
 - Maximal k-partite clique enumration
     - ./mpce test/test_K222.txt -v 4 --fconf kpartite.conf -p
 - example comfigure file: kpartite.conf. The configure file store the lower bound of the vertices in each kpartite clique partite
+- The 'make test' command will execute all test files located within the test directory. 
 
 ## Input file format requirement
 

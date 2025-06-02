@@ -1,43 +1,41 @@
 # Makefile for Clique
 
 CC = gcc
-#CC = g++
 HEAD = head
 OBJDIR = obj
 SDIR = src
 CFLAGS = -O3 -g -Wall -I$(HEAD)
 PTHREADS = -lpthread
-TESTFLAGS = #-DPERFORMANCE -DDEBUG
+TESTFLAGS = # Optional: -DPERFORMANCE -DDEBUG
 LFSFLAG = -D_FILE_OFFSET_BITS=64
 
-OBJECTS = clique-driver.o graph.o utility.o bk.o ReadKG.o bk-addition.o
-HEADERS = graph.h utility.h bk.h ReadKG.h
+SRC_FILES = $(wildcard $(SDIR)/*.c)
+OBJ_NAMES = $(notdir $(SRC_FILES:.c=.o))
+OBJECTS = $(addprefix $(OBJDIR)/, $(OBJ_NAMES))
 EXECUTABLE = mpce
 
-TEST_DIR = test
-TEST_FILES = $(wildcard $(TEST_DIR)/*.txt)
+.PHONY: all clean debug run
 
 all: $(EXECUTABLE)
 
-#pmce: clique-driver.o $(OBJECTS) #$(HEADERS) Makefile
-$(EXECUTABLE): $(OBJECTS) #$(HEADERS) Makefile
-	mv $(OBJECTS) $(OBJDIR)/
-	$(CC) $(CFLAGS) $(LFSFLAG) -o $@ $(OBJDIR)/*.o $(PTHREADS)
+$(OBJDIR):
+	@mkdir -p $@
 
-#.c.o:
-$(OBJECTS):
-#	echo $(CC) $(CFLAGS) $(LFSFLAG) $(TESTFLAGS) -c $(SDIR)/*.c
-	$(CC) $(CFLAGS) $(LFSFLAG) $(TESTFLAGS) -c $(SDIR)/*.c
-#	mv $(OBJECTS) $(OBJDIR)/
+$(OBJDIR)/%.o: $(SDIR)/%.c | $(OBJDIR)
+	$(CC) $(CFLAGS) $(LFSFLAG) $(TESTFLAGS) -c $< -o $@
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) $(LFSFLAG) -o $@ $^ $(PTHREADS)
+
+# Debug target to launch with gdb
+# Use: `make debug` then type "run" in GDB
+
+debug: $(EXECUTABLE)
+	gdb ./$(EXECUTABLE)
+
+# Optional target to run directly (useful during development)
+run: $(EXECUTABLE)
+	./$(EXECUTABLE)
 
 clean:
-	rm -f core* *.o $(EXECUTABLE) gmon.out gprof.out $(OBJDIR)/*
-
-test: $(EXECUTABLE)
-	@for test_file in $(TEST_FILES); do \
-		echo "Running test for $$test_file with version 4, 6, 8"; \
-		./$(EXECUTABLE) $$test_file -v 4 --fconf kpartite.conf -p; \
-		./$(EXECUTABLE) $$test_file -v 6 --fconf kpartite.conf -p; \
-		./$(EXECUTABLE) $$test_file -v 8 --fconf kpartite.conf -p; \
-	done
-
+	rm -f core* $(OBJDIR)/*.o $(EXECUTABLE) gmon.out gprof.out

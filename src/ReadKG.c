@@ -175,6 +175,7 @@ Graph * ReadKG(FILE *fp)
 	    G->_num_vertices = k;
 	    G->_num_active_vertices = k;
     }
+    //fprintf(stdout, "Success reaad in KG graph : %d vertices, %d edges\n", k, edges);
     hdestroy();
     return G;
 }
@@ -204,7 +205,7 @@ void GetConfig(char * confile, Graph * G)
     FILE * fconf;
     if ((fconf = fopen(confile, "r")) == NULL) 
     {
-        fprintf(stderr, "Can't open file %s\n", confile);
+        fprintf(stderr, "Can't open configure file %s\n", confile);
         exit(-1);
     }
     int lb;

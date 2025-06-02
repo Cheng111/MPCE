@@ -28,7 +28,8 @@ extern int PART;
 //extern int lb1, lb2, lb3;
 extern int Spart;
 FILE *fp;
-char *outfn, infn[100];
+char *outfn = NULL;
+char infn[100];
 //extern char * FilterName;
 char * confile;
 
@@ -68,7 +69,7 @@ void argument_parse(int argc, char **argv)
   PRINT = 0;
   //FILTER = 0;
   PART = 0;
-  outfn = NULL;
+  //outfn = NULL;
   //lb1 = lb2 = lb3 = 5;
   
   
@@ -89,14 +90,14 @@ void argument_parse(int argc, char **argv)
 	  PRINT = 1;
 	}
   if (!strcmp(argv[i], "--fconf")) {
-	  PART = 1;
+	PART = 1;
     confile = argv[i + 1];
 	}
   }
 
   strcpy(infn, argv[1]);
   if ((fp = fopen(argv[1], "r")) == NULL) {
-    fprintf(stderr, "Can't open file %s\n", argv[1]);
+    fprintf(stderr, "Can't open input file %s\n", argv[1]);
     exit(-1);
   }
 
@@ -145,10 +146,10 @@ void order_vertex(Graph *G, int psizes[], vid_t * vertices, GP * gp)
   //printf("\n");
 }
 
-void maximal_clique(Graph *G)
+void maximal_clique(char * confile, Graph *G)
 {
   FILE *fp1=stdout, *fp2;
-  char fname[100];
+  char fname[512];
   double utime;
   unsigned int n = num_vertices(G);
   vid_t clique[n];
@@ -197,10 +198,10 @@ void maximal_clique(Graph *G)
     }
     //printf("4444444444444444444444\n");
     GetConfig(confile, G);
-    /*printf("vertices: ");
+    printf("vertices: ");
     for(i = 0; i < n; i++)
     {printf("%s %d\t", G->_label[vertices[i]], G->_category[vertices[i]]);}
-    printf("\n");*/
+    printf("\n");
     //GP gp[G->Pnum];
     GP * gp = malloc(G->Pnum*sizeof(GP));
     //memset(gp, 0, G->Pnum*sizeof(GP));
@@ -283,7 +284,7 @@ int main(int argc, char  **argv)
   if (UB == -1) UB = num_vertices(G);
 
   if (VERSION == 3) maximum_clique(G);
-  else maximal_clique(G);
+  else maximal_clique(confile, G);
 
   graph_free(G);
 

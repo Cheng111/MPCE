@@ -198,10 +198,11 @@ void maximal_clique(char * confile, Graph *G)
     }
     //printf("4444444444444444444444\n");
     GetConfig(confile, G);
+    /*
     printf("vertices: ");
     for(i = 0; i < n; i++)
     {printf("%s %d\t", G->_label[vertices[i]], G->_category[vertices[i]]);}
-    printf("\n");
+    printf("\n");*/
     //GP gp[G->Pnum];
     GP * gp = malloc(G->Pnum*sizeof(GP));
     //memset(gp, 0, G->Pnum*sizeof(GP));

@@ -26,38 +26,16 @@ extern char C2[];
 extern char C3[];
 
 
-/* ------------------------------------------------------------- *
- * Function: clique_out()                                        *
- * ------------------------------------------------------------- */
+/* ------------------------------------------------------------------- *
+ * Function: clique_out()    *                                     *
+ * Output the clique or k-partite clique that meets the requirements.  *
+ * ------------------------------------------------------------------- */
 void clique_out(FILE *fp, Graph *G, vid_t *clique, int len)
 {
   int i;
 
-  /*if(PART)
-  {
-	  int p1, p2, p3;
-  	  p1 = p2 = p3 =0;
-	  //char * PrintCli[len];
-	  for (i = 0; i < len; i++)
-	  {
-		  //if(strcmp(G->_category[clique[i]], C1) == 0)
-		  if(G->_category[clique[i]] == 0)
-		  {p1 = p1 + 1;}
-		  //else if(strcmp(G->_category[clique[i]], C2) == 0)
-		  else if(G->_category[clique[i]] == 1)
-		  {p2 = p2 + 1;}
-		  //else if(strcmp(G->_category[clique[i]], C3) == 0)
-		  else if(G->_category[clique[i]] == 2)
-		  {p3 = p3 + 1;}
-		  else
-		  {fprintf(stderr, "cannot find catagory for %s %s\n", G->_category[clique[i]], G->_label[clique[i]]);}
-	  }
-	  //printf("lb1 %d lb2 %d lb3 %d p1 %d p2 %d p3 %d\n", lb1, lb2, lb3, p1, p2, p3);
-	  if( (p1 < lb1) | (p2 < lb2) | (p3 < lb3) )
-	  {return;}
-  }*/
   for (i = 0; i < len-1; i++)
-	{//printf("G->_label[clique[i]] %s\n", G->_label[clique[i]]);
+	{
 		fprintf(fp, "%s\t", G->_label[clique[i]]);
 	}
   fprintf(fp, "%s\n", G->_label[clique[i]]);
@@ -67,6 +45,7 @@ void clique_out(FILE *fp, Graph *G, vid_t *clique, int len)
 
 /* ------------------------------------------------------------- *
  * Function: clique_profile_out()                                *
+ Report the number of cliques or k-partite cliques categorized by their length.
  * ------------------------------------------------------------- */
 void clique_profile_out(FILE *fp, u64 *nclique, Graph *G)
 {
@@ -403,38 +382,33 @@ void clique_enumerate(FILE *fp, u64 *nclique, Graph *G, vid_t *cand, int lcand)
 
 /* ------------------------------------------------------------- *
  * Function: clique_find_v4()                                    *
- *   Bron-Kerbosch version 4 : numerical order with pivot        *
- *   Recursive function to find k-partite cliques                *
+ *   BUse the Bron–Kerbosch algorithm with pivoting to enumerate *
+ *   maximal k-partite cliques.                                  *
  *   Terminate when the candidate set from one partite is empty  *
  *   and no vertex from this partite is present in the current   *
  *   clique.                                                     *
  * ------------------------------------------------------------- */
- /* vid_t *clique(R): current clique
- 	vid_t *old(P): X cascade P
+ /* vid_t *clique: current candidate partite clique C.
+ 	vid_t *old: X (vertices cannot extend C) cascade M (vertices may extend the C)
 	ne: size of X
-	ce: size of X + P
+	ce: size of X + M
 	nclique: used for hist graph for clique length
 	lc: clique length - 1 */
 void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes, int * psizes)
 {
-//	printf("v4v4v4v4\n");
   vid_t new[ce];
   int new_ne, new_ce;
   vid_t u, pivot;
   int i, j, pnei;//neibor of pivot vertex should be in P
-  //vid_t newvertex[Spart][ce];
   int new_psizes[G->Pnum];
   int upid, jpid;
   int parclique = 0;
-  //printf("lc ne ce %d %d %d\n", lc, ne, ce);
-  //printf("lc ne ce G->Pnum %d %d %d %d\n", lc, ne, ce, G->Pnum);
+  //Terminate when the candidate set of a partite is empty and no vertex from that partite is included in the candidate k-partite clique.
   for(i = 0; i < G->Pnum; i++)
   {
-	//printf("i, csizes[i], psizes[i] %d %d %d\n", i, csizes[i], psizes[i]);
 	  if(csizes[i] == 0 && psizes[i] == 0)
 	  {
-	//	printf("i %d\n", i);
 		return;}
   }
   pivot = old[ne];
@@ -445,22 +419,18 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 	upid = G->_category[u];
 	if (u != pivot)
 	{
+        //In this recursion, skip processing vertices that are either adjacent to the pivot or belong to the same partite set as the pivot vertex.
 		if(edge_exists(G, u, pivot) || (G->_category[u] == G->_category[pivot]))
 		{
-			//ne++;
-			//tmpu = u;
 			old[ne] = old[pnei];
 			old[pnei] = u;
 			pnei--;
-			//if(pnei < ne)
-			//{break;}
 
 			continue;
 		}
 	}
 	if(pnei < ne)
 	{break;}
-	//printf("ne u category label %d %d %s %s\n", ne, u, G->_categoryname[G->_category[u]], G->_label[u]);
 	/* Set new cand and not */
 	memset(new, -1, ce*sizeof(vid_t));
 	memset(new_psizes, 0, G->Pnum * sizeof(int));
@@ -470,8 +440,6 @@ void clique_find_v4(FILE *fp, u64 *nclique, Graph *G, \
 	  if (edge_exists(G, u, old[j]) || (G->_category[old[j]] == G->_category[u])) 
 	  {
 		  jpid = G->_category[old[j]];
-		  //newvertex[jpid][new_psizes[jpid]] = old[j];
-		  //new_psizes[jpid]++;
 		  new[new_ne++] = old[j];
 	  }
 	}

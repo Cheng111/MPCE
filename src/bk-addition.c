@@ -9,10 +9,8 @@
 /* Global Variables */
 extern int VERSION;
 extern int PRINT;
-//int lb1, lb2, lb3;
-//int Spart;
+
 extern char * partitefile;
-extern int p1_size, p2_size, p3_size;
 extern char C1[];
 extern char C2[];
 extern char C3[];

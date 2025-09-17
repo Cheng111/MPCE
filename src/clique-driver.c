@@ -67,10 +67,8 @@ void argument_parse(int argc, char **argv)
   LB = 3; UB = -1;
   VERSION = 2;
   PRINT = 0;
-  //FILTER = 0;
   PART = 0;
-  //outfn = NULL;
-  //lb1 = lb2 = lb3 = 5;
+
   
   
   for (i = 2; i < argc; i++) {
@@ -115,7 +113,6 @@ int cmp_gp(const void *gp1, const void *gp2) {
 void order_vertex(Graph *G, int psizes[], vid_t * vertices, GP * gp)
 {
   int i, j, k;
-  //GP gp[G->Pnum];
   int c;
   for(i = 0; i < G->Pnum; i++)
   {

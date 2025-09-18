@@ -232,15 +232,3 @@ void GetConfig(char * confile, Graph * G)
     }
     fclose(fconf);
 }
-
-//Use for debug
-/*int main(int argc, char  **argv)
-{
-    FILE * fp = fopen(argv[1], "r");
-    Graph *  G = ReadKG(fp);
-    GetConfig(argv[2], G);
-    int i;
-    for(i = 0; i < G->Pnum; i++)
-    {printf("%d ", G->lbs[i]);}
-    printf("\n");
-}*/

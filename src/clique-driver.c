@@ -11,27 +11,22 @@
  */
 
 #include <string.h>
-//#include "bit.h"
 #include "graph.h"
-//#include "utility.h"
 #include "bk.h"
 #include "ReadKG.h"
-//#include "PartiteSize.h"
 
 
 /* Global variables */
 extern int LB,UB;  // lower bound and upper bound of clique size
 extern int VERSION;
 extern int PRINT;
-//extern int FILTER;
 extern int PART;
-//extern int lb1, lb2, lb3;
 extern int Spart;
 FILE *fp;
 char *outfn = NULL;
 char infn[100];
-//extern char * FilterName;
 char * confile;
+int lb;
 
 
 void print_options(void)
@@ -87,10 +82,14 @@ void argument_parse(int argc, char **argv)
 	if (!strcmp(argv[i], "-p")) {
 	  PRINT = 1;
 	}
-  if (!strcmp(argv[i], "--fconf")) {
-	PART = 1;
-    confile = argv[i + 1];
+  if (!strcmp(argv[i], "-klb")) {
+    PART = 1;
+	  lb = atoi(argv[++i]);
 	}
+  //if (!strcmp(argv[i], "--fconf")) {
+	//PART = 1;
+    //confile = argv[i + 1];
+	//}
   }
 
   strcpy(infn, argv[1]);
@@ -193,8 +192,12 @@ void maximal_clique(char * confile, Graph *G)
       pid = G->_category[i];
       psizes[pid]++;
     }
+    G->lbs = (int *) malloc(G->Pnum * sizeof(int));
+    for(i = 0; i < G->Pnum; i++)
+    {
+      G->lbs[i] = lb;}
     //printf("4444444444444444444444\n");
-    GetConfig(confile, G);
+    //GetConfig(confile, G);
     /*
     printf("vertices: ");
     for(i = 0; i < n; i++)

@@ -29,12 +29,12 @@ Options:
 - The 'make test version_number' command will execute all .txt files located within the test directory using the provided version number. Support for versions 4 to 8.  
 
 ## Input file format requirement when enumerate maximal k-partite cliques (version 4- 8)
-### 1. Comment line
-The first row should begin with the character `c` followed by a space.  
-This line is treated as a **comment** or **explanation** of the file's contents.
-### 2. Graph matrics line
-The second line must begin with "p edges", followed by three integers: vertex_number edge_number partite_set_number
-### 3. Edge lines
-Each row represents an edge, using the format "e node1 node2"
-### 3. Edge lines
-Each row represents an edge, using the format "n node partite"
+- Comment line
+	- The first row should begin with the character `c` followed by a space.  
+	- This line is treated as a **comment** or **explanation** of the file's contents.
+- Graph matrics line
+	- The second line must begin with "p edges", followed by three integers: vertex_number edge_number partite_set_number
+- Edge lines
+	- Each row represents an edge, using the format "e node1 node2"
+- Node lines
+	- Each row represents a node, using the format "n node partite"

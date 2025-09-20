@@ -9,14 +9,8 @@
 #include <string.h>
 #include <search.h>
 #include "graph.h"
-//#include "readconfig.h"
 #include "ReadKG.h"
 
-//char * FilterName;
-//char * confile;
-char C1[100];
-char C2[100];
-char C3[100];
 extern int Spart;
 
 /* Malloc and initialize a graph, returns a pointer to it */
@@ -35,12 +29,8 @@ Graph *graph_make(unsigned int num_vertices)
 
   G->_label = (char **) malloc(num_vertices * sizeof(char *));
   if (G->_label == NULL) { perror("graph_make : malloc label"); exit(-1); }
-  //G->_category = (char **) malloc(num_vertices * sizeof(char *));
   G->_category = (int *) malloc(num_vertices * sizeof(int));
   if (G->_category == NULL) { perror("graph_make : malloc category"); exit(-1); }
-  //char ** _categoryname
-  //G->_categoryname = (char **) malloc(num_vertices * sizeof(Spart));
-  //if (G->_intraid == NULL) { perror("graph_make : malloc category"); exit(-1); }
   
   G->_neighbor = (unsigned int **) malloc(num_vertices * sizeof(unsigned int *));
   if (G->_neighbor == NULL) { perror("malloc"); exit(-1); }
@@ -112,9 +102,6 @@ Graph * graph_edgelist_in(FILE *fp, int PART)
 
   if(PART){
     G = ReadKG(fp);
-    /*FILE * tmpout = fopen("test.out", "w");
-    printGraph(G, tmpout);
-    fclose(tmpout);*/
     return G;
   }
 

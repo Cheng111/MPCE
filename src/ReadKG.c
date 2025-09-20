@@ -57,9 +57,7 @@ Graph * ReadKG(FILE *fp)
             E = atoi(pch);
             pch = strtok (NULL, delim);
             C = atoi(pch);
-            //printf("N %d E %d C %d\n", N, E, C);
             G = graph_make(N);
-            //(void) hcreate(N + C + 100);
             htab=calloc(1,sizeof(struct hsearch_data));
             hcreate_r(N + 100,htab);
             htabc=calloc(1,sizeof(struct hsearch_data));
@@ -68,7 +66,6 @@ Graph * ReadKG(FILE *fp)
             ids = (int *) malloc(N * sizeof(int));
             cids = (int *) malloc(C * sizeof(int));
             G->Pnum = C;
-            //(void) hcreate(C);
             G->psizes = (int *)malloc(G->Pnum * sizeof(int));
             G->_category = (int *)malloc(N * sizeof(int));
             G->_categoryname = (char **)malloc(G->Pnum * sizeof(char *));
@@ -80,7 +77,6 @@ Graph * ReadKG(FILE *fp)
             pch = strtok (NULL, delim);
             word2 = pch;
             item.key = word1;
-	        //if ((found_item = hsearch(item, FIND)) != NULL) {
             if (hsearch_r(item, FIND, &found_item, htab) != 0) {
 	            id = (int *) (found_item->data);
 	            u = *id;
@@ -88,15 +84,12 @@ Graph * ReadKG(FILE *fp)
 	        else {
 	            u = k;
 	            G->_label[k++] = strdup(word1);
-                //printf("G->_label[k++] u %s %d %d\n", word1, u, k);
 	            item.key = G->_label[u];
 	            ids[u] = u;
 	            item.data = (void *) (ids+u);
-	            //(void) hsearch(item, ENTER);
                 hsearch_r(item, ENTER, &found_item, htab);
 	        }
             item.key = word2;
-	        //if ((found_item = hsearch(item, FIND)) != NULL) {
             if (hsearch_r(item, FIND, &found_item, htab) != 0) {
 	            id = (int *) (found_item->data);
 	            v = *id;
@@ -104,11 +97,9 @@ Graph * ReadKG(FILE *fp)
 	        else {
 	            v = k;
 	            G->_label[k++] = strdup(word2);
-                //printf("G->_label[k++] v %s %d %d\n", word2, v, k);
 	            item.key = G->_label[v];
 	            ids[v] = v;
 	            item.data = (void *) (ids+v);
-	            //(void) hsearch(item, ENTER);
                 hsearch_r(item, ENTER, &found_item, htab);
 	        }
             if (k > N) {
@@ -124,9 +115,7 @@ Graph * ReadKG(FILE *fp)
             word1 = pch;
             pch = strtok (NULL, delim);
             color = pch;
-            //printf("word1 %s color %s\n", word1, color);
             item.key = word1;
-	        //if ((found_item = hsearch(item, FIND)) != NULL){
             if (hsearch_r(item, FIND, &found_item, htab) != 0) {
 	            id = (int *) (found_item->data);
 	            v = *id;
@@ -134,15 +123,12 @@ Graph * ReadKG(FILE *fp)
             else {
 	            v = k;
 	            G->_label[k++] = strdup(word1);
-                //printf("G->_label[k++] u %s %d %d\n", word1, u, k);
 	            item.key = G->_label[v];
 	            ids[v] = v;
 	            item.data = (void *) (ids+v);
-	            //(void) hsearch(item, ENTER);
                 hsearch_r(item, ENTER, &found_item, htab);
 	        }
             citem.key = color;
-            //if ((found_citem = hsearch(citem, FIND)) != NULL){
             if (hsearch_r(citem, FIND, &found_citem, htabc) != 0) {
 	            id = (int *) (found_citem->data);
 	            cid = *id;
@@ -153,12 +139,9 @@ Graph * ReadKG(FILE *fp)
                 cid_use++;
                 cids[cid] = cid;
                 citem.key = G->_categoryname[cid];
-                //printf("G->_categoryname[cid] %s\n", G->_categoryname[cid]);
                 citem.data = (void *) (cids + cid);
-                //hsearch(citem, ENTER);
                 hsearch_r(citem, ENTER, &found_citem, htabc);
             }
-            //printf("%s %d %s %d\n",word1, v, color, cid);
             G->_category[v] = cid;
         }
         else{
@@ -175,7 +158,6 @@ Graph * ReadKG(FILE *fp)
 	    G->_num_vertices = k;
 	    G->_num_active_vertices = k;
     }
-    //fprintf(stdout, "Success reaad in KG graph : %d vertices, %d edges\n", k, edges);
     hdestroy();
     return G;
 }
@@ -183,8 +165,6 @@ Graph * ReadKG(FILE *fp)
 void printGraph(Graph * G, FILE * fout)
 {
     int i;
-    //unsigned int v;
-    //unsigned int * tmp;
     if(fout != NULL)
     {AdjMatrix_out(fout, G);}
     for(i = 0; i < G->_num_vertices; i++)
@@ -209,7 +189,6 @@ void GetConfig(char * confile, Graph * G)
         exit(-1);
     }
     int lb;
-    //printf("G->Pnum %d\n", G->Pnum);
     G->lbs = (int *) malloc(G->Pnum * sizeof(int));
     while ((read = getline(&line, &len, fconf)) != -1) {
         while(line[strlen(line) - 1] == '\n' || line[strlen(line) - 1] == '\x0d'){
@@ -221,11 +200,9 @@ void GetConfig(char * confile, Graph * G)
         {continue;}
         pch = NULL;
         pch = strtok(line, delim);
-        //printf("pch %s\n", pch);
         if(strcmp(pch, tlb) == 0){
             pch = strtok (NULL, delim);
             lb = atoi(pch);
-            //printf("lb %d\n", lb);
             for(i = 0; i < G->Pnum; i++)
             {G->lbs[i] = lb;}
         }

@@ -17,11 +17,6 @@
 int LB, UB, PART;
 int VERSION;
 int PRINT;
-char * partitefile;
-extern char C1[];
-extern char C2[];
-extern char C3[];
-
 
 /* ------------------------------------------------------------------- *
  * Function: clique_out()    *                                     *
@@ -107,7 +102,6 @@ void clique_find_v1(FILE *fp, u64 *nclique, Graph *G, \
 	clique[lc] = u;
 	if (new_ce == 0 && lc+1 >= LB) { //P U X = empty
 	  nclique[lc+1]++;
-	  //fprint("hahahah LB %d\n", LB);
 	  if (PRINT) clique_out(fp, G, clique, lc+1);
 	}
 	else { 
@@ -201,7 +195,6 @@ void clique_find_v2(FILE *fp, u64 *nclique, Graph *G, \
 	clique[lc] = u;
 	if (lc+1 <= UB) {
 	  if (new_ce == 0 && lc+1 >= LB) {
-		//printf("hahahah LB %d\n", LB);
 	    nclique[lc+1]++;
 	    if (PRINT) clique_out(fp, G, clique, lc+1);
 	  }
@@ -775,7 +768,6 @@ void clique_find_v6(FILE *fp, u64 *nclique, Graph *G, \
 	/* Bound condition: Stop if any not is a neighbor of all candidates */ 
     for (i = 0; i < ne; i++) {
 	  for (j = ne; j < ce; j++) {
-	    //if (!edge_exists(G, old[i], old[j])) break;
 		if (!(edge_exists(G, old[i], old[j]) || (G->_category[old[i]] == G->_category[old[j]]) )) break;
 	  }
 	  if (j == ce) return;

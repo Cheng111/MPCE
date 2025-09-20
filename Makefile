@@ -39,3 +39,10 @@ run: $(EXECUTABLE)
 
 clean:
 	rm -f core* $(OBJDIR)/*.o $(EXECUTABLE) gmon.out gprof.out
+
+test: $(EXECUTABLE)
+	@echo "Running tests with version: $(version)"
+	@for file in $(wildcard test/*.txt); do \
+		echo "Running ./$(EXECUTABLE) $$file -v $(version) -klb 1 -p"; \
+		./$(EXECUTABLE) $$file -v $(version) -klb 1 -p; \
+	done

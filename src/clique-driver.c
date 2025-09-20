@@ -38,14 +38,15 @@ void print_options(void)
   fprintf(stderr, "  -o <filename>  filename to store cliques if choose to print out\n");
   fprintf(stderr, "  -l <value>     least number of vertices in a clique <default = 3>\n");
   fprintf(stderr, "  -u <value>     most number of vertices in a clique <default = graph size>\n");
-  fprintf(stderr, "  -v [1|2|3|4]     algorithm version <default = 2>\n");
+  fprintf(stderr, "  -v [1~8]     algorithm version <default = 2>\n");
   fprintf(stderr, "                 1 - bron kerbosch version 1 (numerical order)\n");
   fprintf(stderr, "                 2 - bron kerbosch version 2 (improved version)\n");
   fprintf(stderr, "                 3 - modified bron kerbosch to find maximum clique\n");
   fprintf(stderr, "                 4 - maximal partite cliques enumration (BK with piivot)\n");
-  fprintf(stderr, "                 5 - maximal partite cliques enumration (add intra-partite edges)\n");
-  fprintf(stderr, "                 6 - maximal partite cliques enumration (pick up k different partite set vertices first)\n");
-  fprintf(stderr, "  --fconf        configure file of maximal partite cliques enumration\n");
+  fprintf(stderr, "                 5 - maximal partite cliques enumration (MMCE + BK)\n");
+  fprintf(stderr, "                 6 - maximal partite cliques enumration (MPCE)\n");
+  fprintf(stderr, "                 7 - maximal partite cliques enumration (MMCE + BK with pivot)\n");
+  fprintf(stderr, "                 8 - maximal partite cliques enumration (MMCE variant + BK with pivot)\n");
   fprintf(stderr, "\n");
 }
 
@@ -86,10 +87,6 @@ void argument_parse(int argc, char **argv)
     PART = 1;
 	  lb = atoi(argv[++i]);
 	}
-  //if (!strcmp(argv[i], "--fconf")) {
-	//PART = 1;
-    //confile = argv[i + 1];
-	//}
   }
 
   strcpy(infn, argv[1]);
@@ -127,19 +124,15 @@ void order_vertex(Graph *G, int psizes[], vid_t * vertices, GP * gp)
   if((VERSION == 5) | (VERSION == 7))
   {return;}
   qsort(gp, G->Pnum, sizeof(GP), cmp_gp);
-  //printf("sorted gp ");
   k = 0;
   for(i = 0; i < G->Pnum; i++)
   {
     for(j = 0; j < gp[i].index; j++)
     {
       vertices[k] = gp[i].vertices[j];
-      //printf("vertices[k] %d ", vertices[k]);
       k++;
     }
-    //printf("%d ", gp[i].color);
   }
-  //printf("\n");
 }
 
 void maximal_clique(char * confile, Graph *G)
@@ -157,8 +150,6 @@ void maximal_clique(char * confile, Graph *G)
     sprintf(fname, "%s.clique", outfn);
     fp1 = fopen(fname, "w");
   }
-  //sprintf(fname, "%s.profile", infn);
-  //snprintf(fname, sizeof(fname), "%s.profile", infn);
   if (strlen(infn) + strlen(".profile") >= sizeof(fname)) {
       // Truncate infn to fit the buffer
       strncpy(fname, infn, sizeof(fname) - strlen(".profile") - 1);
@@ -183,8 +174,6 @@ void maximal_clique(char * confile, Graph *G)
   
     int psizes[G->Pnum];//each partite has how much nodes
     int csizes[G->Pnum];
-    //memset(psizes, 0, Spart*sizeof(int));
-    //memset(csizes, 0, Spart*sizeof(int));
     memset(psizes, 0, G->Pnum*sizeof(int));
     memset(csizes, 0, G->Pnum*sizeof(int));
     for (i = 0; i < n; i++)
@@ -196,24 +185,14 @@ void maximal_clique(char * confile, Graph *G)
     for(i = 0; i < G->Pnum; i++)
     {
       G->lbs[i] = lb;}
-    //printf("4444444444444444444444\n");
-    //GetConfig(confile, G);
-    /*
-    printf("vertices: ");
-    for(i = 0; i < n; i++)
-    {printf("%s %d\t", G->_label[vertices[i]], G->_category[vertices[i]]);}
-    printf("\n");*/
-    //GP gp[G->Pnum];
+
     GP * gp = malloc(G->Pnum*sizeof(GP));
-    //memset(gp, 0, G->Pnum*sizeof(GP));
     G->gps = gp;
     for(i = 0; i < G->Pnum; i++)
     {
       gp[i].color = i;
       gp[i].size = psizes[i];
     }
-    //qsort(gp, G->Pnum, sizeof(GP), cmp_gp);
-    //order_vertex(G, psizes, vertices, gp);
     if(VERSION == 5)
     {
       order_vertex(G, psizes, vertices, gp);
@@ -235,6 +214,11 @@ void maximal_clique(char * confile, Graph *G)
     else if (VERSION == 8)
     {
       clique_find_v8(fp1, nclique, G, clique, vertices, 0, 0, n, csizes, psizes);
+    }
+    else
+    {
+      fprintf(stderr, "Wrong version number! The version number should be between 1 ~ 8\n");
+      exit(1);
     }
   }
   utime = get_cur_time() - utime;

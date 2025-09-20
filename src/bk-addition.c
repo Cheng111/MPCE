@@ -10,11 +10,6 @@
 extern int VERSION;
 extern int PRINT;
 
-extern char * partitefile;
-extern char C1[];
-extern char C2[];
-extern char C3[];
-
 void clique_find_v7(FILE *fp, u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, int lc, int ne, int ce, int * csizes)
 {
@@ -22,7 +17,6 @@ void clique_find_v7(FILE *fp, u64 *nclique, Graph *G, \
 	GP * gp;
 	vid_t u, v;
 	FILE *fout = fopen("filename.txt", "w");
-	//printGraph(G, fout);
 	fclose(fout);
 	for(k = 0; k < G->Pnum; k++ )
 	{
@@ -33,14 +27,10 @@ void clique_find_v7(FILE *fp, u64 *nclique, Graph *G, \
 			{
 				u = old[gp->vertices[i]];
 				v = old[gp->vertices[j]];
-				//printf("u %d v %d label_u %s label_v %s\n", u, v, G->_label[u], G->_label[v]);
 				add_edge(G, u, v);
 			}
 		}
 	}
-	//fout = fopen("filename1.txt", "w");
-	//printGraph(G, fout);
-	//fclose(fout);
 	clique_find_v7_sub(fp, nclique, G, clique, old, lc, ne, ce, csizes);
 }
 
@@ -51,8 +41,6 @@ void clique_find_v7_sub(FILE *fp, u64 *nclique, Graph *G, \
   int new_ne, new_ce;
   vid_t u, pivot;
   int i, j, pnei;//neibor of pivot vertex should be in P
-  //vid_t newvertex[Spart][ce];
-  //int new_psizes[G->Pnum];
   int upid;//, jpid;
   int parclique = 0;
 
@@ -66,13 +54,9 @@ void clique_find_v7_sub(FILE *fp, u64 *nclique, Graph *G, \
 	{
 		if(edge_exists(G, u, pivot))
 		{
-			//ne++;
-			//tmpu = u;
 			old[ne] = old[pnei];
 			old[pnei] = u;
 			pnei--;
-			//if(pnei < ne)
-			//{break;}
 
 			continue;
 		}
@@ -81,15 +65,11 @@ void clique_find_v7_sub(FILE *fp, u64 *nclique, Graph *G, \
 	{break;}
 	/* Set new cand and not */
 	memset(new, -1, ce*sizeof(vid_t));
-	//memset(new_psizes, 0, G->Pnum * sizeof(int));
     new_ne = 0;
 	for (j = 0; j < ne; j++)
 	{
 	  if (edge_exists(G, u, old[j])) 
 	  {
-		  //jpid = G->_category[old[j]];
-		  //newvertex[jpid][new_psizes[jpid]] = old[j];
-		  //new_psizes[jpid]++;
 		  new[new_ne++] = old[j];
 	  }
 	}
@@ -98,8 +78,6 @@ void clique_find_v7_sub(FILE *fp, u64 *nclique, Graph *G, \
 	{
 	  if (edge_exists(G, u, old[j]))
 	  {
-		  //jpid = G->_category[old[j]];
-		  //new_psizes[jpid]++;
 		  new[new_ce++] = old[j];//add N(u) nad P(u)(same partite set) to X
 	  }
 	}
@@ -111,12 +89,10 @@ void clique_find_v7_sub(FILE *fp, u64 *nclique, Graph *G, \
 	if(new_ce == 0) 
 	{
 	  parclique = 0;
-	  //printf("????????\n");
 	  for(i = 0; i < G->Pnum; i++)
 	  {
 		  if(csizes[i] < G->lbs[i])
 		  {
-			  //printf("%d, %d, %d\n", i, csizes[i], G->lbs[i]);
 			  parclique = 1;
 			  break;
 		  }
@@ -124,7 +100,6 @@ void clique_find_v7_sub(FILE *fp, u64 *nclique, Graph *G, \
 	  if(parclique == 0)
 	  {
 		  nclique[lc+1]++;
-	    //print("hahahah LB %d\n", LB);
 	  	if (PRINT) clique_out(fp, G, clique, lc+1);
 	  }
 	}
@@ -170,12 +145,9 @@ void clique_find_v8(FILE *fp, u64 *nclique, Graph *G, \
   int new_ne, new_ce;
   vid_t u, pivot;
   int i, j, pnei;//neibor of pivot vertex should be in P
-  //vid_t newvertex[Spart][ce];
   int new_psizes[G->Pnum];
   int upid, jpid;
   int parclique = 0;
-  //printf("lc ne ce %d %d %d\n", lc, ne, ce);
-  //printf("lc ne ce G->Pnum %d %d %d %d\n", lc, ne, ce, G->Pnum);
   pivot = old[ne];
   pnei = ce -1;
   while (ne < ce) 
@@ -186,20 +158,14 @@ void clique_find_v8(FILE *fp, u64 *nclique, Graph *G, \
 	{
 		if(edge_exists(G, u, pivot) || (G->_category[u] == G->_category[pivot]))
 		{
-			//ne++;
-			//tmpu = u;
 			old[ne] = old[pnei];
 			old[pnei] = u;
 			pnei--;
-			//if(pnei < ne)
-			//{break;}
-
 			continue;
 		}
 	}
 	if(pnei < ne)
 	{break;}
-	//printf("ne u category label %d %d %s %s\n", ne, u, G->_categoryname[G->_category[u]], G->_label[u]);
 	/* Set new cand and not */
 	memset(new, -1, ce*sizeof(vid_t));
 	memset(new_psizes, 0, G->Pnum * sizeof(int));
@@ -209,8 +175,6 @@ void clique_find_v8(FILE *fp, u64 *nclique, Graph *G, \
 	  if (edge_exists(G, u, old[j]) || (G->_category[old[j]] == G->_category[u])) 
 	  {
 		  jpid = G->_category[old[j]];
-		  //newvertex[jpid][new_psizes[jpid]] = old[j];
-		  //new_psizes[jpid]++;
 		  new[new_ne++] = old[j];
 	  }
 	}
@@ -229,19 +193,13 @@ void clique_find_v8(FILE *fp, u64 *nclique, Graph *G, \
 	upid = G->_category[u];
 	clique[lc] = u;
 	csizes[upid]++;
-	//printf("new_ce %d\n", new_ce);
 	if(new_ce == 0) 
 	{
 	  parclique = 0;
-	  //printf("????????\n");
 	  for(i = 0; i < G->Pnum; i++)
 	  {
-		  //printf("i %d %d\n", i, csizes[i]);
-		  //if(csizes[i] == 0)
-		  //printf("csizes[i] G->lbs[i] %d %d\n", csizes[i], G->lbs[i]);
 		  if(csizes[i] < G->lbs[i])
 		  {
-			  //printf("%d, %d, %d\n", i, csizes[i], G->lbs[i]);
 			  parclique = 1;
 			  break;
 		  }
@@ -249,7 +207,6 @@ void clique_find_v8(FILE *fp, u64 *nclique, Graph *G, \
 	  if(parclique == 0)
 	  {
 		  nclique[lc+1]++;
-	    //print("hahahah LB %d\n", LB);
 	  	if (PRINT) clique_out(fp, G, clique, lc+1);
 	  }
 	}

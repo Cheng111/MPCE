@@ -15,7 +15,7 @@
 #include "bk.h"
 #include "ReadKG.h"
 
-#define MAX_PATH_LENGTH = 4096; // On Linux
+#define MAX_PATH_LENGTH 4096 // On Linux
 
 /* Global variables */
 extern int LB,UB;  // lower bound and upper bound of clique size
